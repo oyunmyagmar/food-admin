@@ -5,8 +5,10 @@ export const AdminLayout = ({ children }: { children: ReactNode }) => {
   return (
     <div className="flex">
       <SideBar />
-      <Header />
-      {children}
+      <div>
+        <Header />
+        {children}
+      </div>
     </div>
   );
 };

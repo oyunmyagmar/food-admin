@@ -29,15 +29,15 @@ export const SideBar = () => {
           </p>
         </div>
       </div>
-      <Button className="rounded-full gap-2.5 has-[>svg]:pl-6 py-2.5 has-[>svg]:pr-[34px] h-10">
-        <LuLayoutDashboard className="size-[22px]" />
-        Food menu
-      </Button>
-      <div className="w-full flex gap-2.5 items-center px-6 py-[9px] mt-6">
-        <LiaTruckMovingSolid size={22} />
-        <p className="flex-1 text-sm leading-5 font-medium text-foreground">
-          Orders
-        </p>
+      <div className="flex flex-col gap-6">
+        <Button className="rounded-full gap-2.5 has-[>svg]:px-6 py-2.5 h-10">
+          <LuLayoutDashboard className="size-[22px]" />
+          <p className="w-[85px] text-left">Food menu</p>
+        </Button>
+        <Button className="rounded-full gap-2.5 has-[>svg]:px-6 py-2.5 h-10">
+          <LiaTruckMovingSolid className="size-[22px]" />
+          <p className="w-[85px] text-left">Orders</p>
+        </Button>
       </div>
     </div>
   );
