@@ -32,6 +32,7 @@ const ProductsPage = () => {
   const [image, setImage] = useState<File | undefined>();
 
   const [categoryName, setCategoryName] = useState<string>("");
+  const [gategories, setCategories] = useState<string[]>([]);
 
   function imageChangeHandler(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files?.[0]) {
@@ -94,6 +95,16 @@ const ProductsPage = () => {
     setCategoryName(e.target.value);
   };
 
+  const getGategories = async () => {
+    const result = await fetch("http://localhost:3000/categories,");
+    console.log(result);
+    const responseData = await result.json();
+    const { data } = responseData;
+    setCategories(data);
+  };
+  useEffect(() => {
+    setCategories(data);
+  }, []);
   return (
     <AdminLayout>
       <div className="h-screen pl-6 pr-10 bg-secondary flex flex-col gap-6">
