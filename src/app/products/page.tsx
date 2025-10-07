@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import {
   Button,
   Dialog,
@@ -24,20 +24,23 @@ import { LuTrash } from "react-icons/lu";
 
 const ProductsPage = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const [preview, setPreview] = useState("");
   const [name, setName] = useState<string>("");
   const [price, setPrice] = useState<number>(0);
-  const [ingreds, setIngreds] = useState<string>("");
+  const [ingredients, setIngredients] = useState<string>("");
+  const [image, setImage] = useState<File | undefined>();
 
-  function handleImage(event: React.ChangeEvent<HTMLInputElement>) {
+  const [categoryName, setCategoryName] = useState<string>("");
+
+  function imageChangeHandler(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files?.[0]) {
       const file = event.target.files[0];
       const filePreview = URL.createObjectURL(file);
-      console.log(file);
       setPreview(filePreview);
     }
   }
-  const categoty = [
+  const categories = [
     "All Dishes",
     "Apetizers",
     "Salads",
@@ -51,47 +54,137 @@ const ProductsPage = () => {
     "Beverages",
   ];
   const addFoodHandler = () => {
-    console.log();
+    console.log({ name, price, ingredients });
+    fetch("http://localhost:3000/create-food", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, price, ingredients }),
+    });
+    setName("");
+    setPrice(0);
+    setIngredients("");
+    // alert("New dish is being added to the menu");
   };
 
-  const nameChangeHandler = () => {
-    const name = event?.target.value;
+  const addCategoryHandler = () => {
+    console.log({ categoryName });
+    fetch("http://localhost:3000/create-category", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ categoryName }),
+    });
+    setCategoryName("");
+    // alert("New Category is being added to the menu");
   };
+
+  const nameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+  };
+  const priceChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setPrice(Number(e.target.value));
+  };
+  const ingredientsChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setIngredients(e.target.value);
+  };
+  const categoryNameHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setCategoryName(e.target.value);
+  };
+
   return (
     <AdminLayout>
-      <div className="h-screen pl-6 pt-6 pr-10 bg-secondary flex flex-col gap-6">
-        <div className="p-6 bg-white">
+      <div className="h-screen pl-6 pr-10 bg-secondary flex flex-col gap-6">
+        <div className="p-6 bg-background rounded-xl">
           <div className="flex flex-wrap gap-3">
-            {categoty.map((categoty) => (
+            <p className="text-xl leading-7 font-semibold text-foreground w-full">
+              Dishes category
+            </p>
+            {categories.map((category) => (
               <Button
-                key={categoty}
+                type="button"
+                key={category}
                 variant={"outline"}
                 className="rounded-full px-4 py-2"
               >
                 <div className="flex gap-2 items-center">
                   <p className="leading-5 text-secondary-foreground">
-                    {categoty}
+                    {category}
                   </p>
                   <Badge className="rounded-full px-2.5">
-                    <p className="text-xs leading-4 font-semibold">{100}</p>
+                    <p className="leading-4 font-semibold">{100}</p>
                   </Badge>
                 </div>
               </Button>
             ))}
-            <Button
-              variant={"destructive"}
-              className="w-9 h-9 rounded-full bg-red-500"
-            >
-              <GoPlus />
-            </Button>
+
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  type="button"
+                  variant={"destructive"}
+                  className="w-9 h-9 rounded-full bg-red-500"
+                  onClick={addCategoryHandler}
+                >
+                  <GoPlus size={16} />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="w-115 gap-6 rounded-xl">
+                <DialogHeader>
+                  <DialogTitle className="flex gap-2.5 items-center mb-4">
+                    <p className="flex-1 leading-7 text-foreground">
+                      Add new category
+                    </p>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      className="w-9 h-9 rounded-full"
+                      onClick={() => setOpen(false)}
+                    >
+                      <IoCloseOutline size={16} />
+                    </Button>
+                  </DialogTitle>
+                  <DialogDescription className="hidden" />
+                </DialogHeader>
+
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="categoryName" className="text-foreground">
+                    Category name
+                  </Label>
+                  <Input
+                    id="categoryName"
+                    name="categoryName"
+                    type="text"
+                    placeholder="Type category name..."
+                    className="text-sm leading-5 py-2"
+                    defaultValue={categoryName}
+                    value={categoryName}
+                    onChange={categoryNameHandler}
+                  />
+                </div>
+                <DialogFooter className="mt-6">
+                  <Button type="button" onClick={addCategoryHandler}>
+                    <p className="leading-5">Add category</p>
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
 
-        <div className="p-5 bg-white">
+        <div className="p-5 bg-background rounded-xl">
+          <div className="flex gap-2">
+            <p>Appetizers</p>
+            <span>(6)</span>
+          </div>
+
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
               <div className="w-[270.75px] h-[241px] py-2 px-4 border border-dashed border-red-500 flex flex-col items-center justify-center gap-6 rounded-[20px]">
                 <Button
+                  type="button"
                   variant="destructive"
                   className="w-10 h-10 rounded-full bg-red-500"
                 >
@@ -109,6 +202,7 @@ const ProductsPage = () => {
                     Add new Dish to Appetizers
                   </p>
                   <Button
+                    type="button"
                     variant="secondary"
                     className="w-9 h-9 rounded-full"
                     onClick={() => setIsOpen(false)}
@@ -145,58 +239,74 @@ const ProductsPage = () => {
                     type="number"
                     placeholder="Enter price..."
                     className="text-sm leading-5 py-2"
-                    defaultValue={price}
+                    defaultValue="0"
+                    value={price}
+                    onChange={priceChangeHandler}
                   />
                 </div>
               </div>
 
-              <div>
-                <p className="text-sm font-medium text-foreground mb-2">
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="ingredients" className="text-foreground">
                   Ingredients
-                </p>
+                </Label>
                 <Textarea
+                  id="ingredients"
+                  name="ingredients"
                   placeholder="List ingredients..."
-                  className="text-sm leading-5 h-[90px] w-full"
+                  className="text-sm leading-5 h-[90px]"
+                  defaultValue={ingredients}
+                  value={ingredients}
+                  onChange={ingredientsChangeHandler}
                 />
               </div>
 
-              <div>
-                <p className="text-sm font-medium text-foreground mb-2">
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="image" className="text-foreground">
                   Food image
-                </p>
+                </Label>
                 {preview ? (
-                  <div className="w-103 h-[138px] rounded-md relative overflow-hidden">
+                  <div className="w-full h-[138px] rounded-md relative overflow-hidden">
                     <Image src={preview} alt="" fill objectFit="cover" />
                     <Button
+                      type="button"
                       variant="outline"
                       className="absolute w-9 h-9 rounded-full right-2 top-2"
                       onClick={() => {
                         setPreview("");
                       }}
                     >
-                      <IoCloseOutline />
+                      <IoCloseOutline className="size-[16px]" />
                     </Button>
                   </div>
                 ) : (
-                  <div className="w-103 h-[138px] bg-[#2563EB]/5 flex justify-center items-center p-4 rounded-md border border-dashed border-[#2563EB]/20 relative">
+                  <div className="w-full h-[138px] bg-[#2563EB]/5 flex justify-center items-center p-4 rounded-md border border-dashed border-[#2563EB]/20 relative">
                     <input
+                      id="image"
+                      name="image"
                       type="file"
-                      onChange={handleImage}
                       className="absolute inset-0 opacity-0"
+                      onChange={imageChangeHandler}
                     />
                     <div className="flex flex-col justify-center items-center gap-2">
                       <div className="w-8 h-8 rounded-full bg-background flex justify-center items-center">
                         <LuImage size={16} />
                       </div>
-                      <p>Choose a file or drag & drop it here</p>
+                      <p className="text-sm leading-5 font-medium text-primary">
+                        Choose a file or drag & drop it here
+                      </p>
                     </div>
                   </div>
                 )}
               </div>
 
               <DialogFooter className="mt-6">
-                <Button className="w-[93px] h-10" onClick={addFoodHandler}>
-                  Add Dish
+                <Button
+                  type="button"
+                  onClick={addFoodHandler}
+                  onKeyDown={(e) => e.key === "Enter" && addFoodHandler()}
+                >
+                  <p className="leading-5">Add Dish</p>
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -244,10 +354,14 @@ const ProductsPage = () => {
                   </div>
 
                   <DialogFooter>
-                    <Button variant="outline" className="border-destructive">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="border-destructive"
+                    >
                       <LuTrash className="text-destructive" />
                     </Button>
-                    <Button>Save changes</Button>
+                    <Button type="button">Save changes</Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
