@@ -12,6 +12,7 @@ import {
   Input,
   Textarea,
   Badge,
+  Label,
 } from "@/components/ui";
 import { GoPlus } from "react-icons/go";
 import { IoCloseOutline } from "react-icons/io5";
@@ -24,6 +25,9 @@ import { LuTrash } from "react-icons/lu";
 const ProductsPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [preview, setPreview] = useState("");
+  const [name, setName] = useState<string>("");
+  const [price, setPrice] = useState<number>(0);
+  const [ingreds, setIngreds] = useState<string>("");
 
   function handleImage(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files?.[0]) {
@@ -46,6 +50,13 @@ const ProductsPage = () => {
     "Desserts",
     "Beverages",
   ];
+  const addFoodHandler = () => {
+    console.log();
+  };
+
+  const nameChangeHandler = () => {
+    const name = event?.target.value;
+  };
   return (
     <AdminLayout>
       <div className="h-screen pl-6 pt-6 pr-10 bg-secondary flex flex-col gap-6">
@@ -77,7 +88,7 @@ const ProductsPage = () => {
         </div>
 
         <div className="p-5 bg-white">
-          <Dialog>
+          <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
               <div className="w-[270.75px] h-[241px] py-2 px-4 border border-dashed border-red-500 flex flex-col items-center justify-center gap-6 rounded-[20px]">
                 <Button
@@ -109,24 +120,32 @@ const ProductsPage = () => {
               </DialogHeader>
 
               <div className="flex gap-6">
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-foreground mb-2">
+                <div className="w-1/2 flex flex-col gap-2">
+                  <Label htmlFor="name" className="text-foreground">
                     Food name
-                  </p>
+                  </Label>
                   <Input
+                    id="name"
+                    name="name"
                     type="text"
                     placeholder="Type food name"
                     className="text-sm leading-5 py-2"
+                    defaultValue={name}
+                    value={name}
+                    onChange={nameChangeHandler}
                   />
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-foreground mb-2">
+                <div className="w-1/2 flex flex-col gap-2">
+                  <Label htmlFor="price" className="text-foreground">
                     Food price
-                  </p>
+                  </Label>
                   <Input
-                    type="text"
+                    id="price"
+                    name="price"
+                    type="number"
                     placeholder="Enter price..."
                     className="text-sm leading-5 py-2"
+                    defaultValue={price}
                   />
                 </div>
               </div>
@@ -176,7 +195,9 @@ const ProductsPage = () => {
               </div>
 
               <DialogFooter className="mt-6">
-                <Button className="w-[93px] h-10">Add Dish</Button>
+                <Button className="w-[93px] h-10" onClick={addFoodHandler}>
+                  Add Dish
+                </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -185,7 +206,7 @@ const ProductsPage = () => {
 
           <div className="w-[270.75px] p-4 border border-border rounded-[20px] flex flex-col gap-5">
             <div className="w-[238.75px] h-[129px] rounded-xl relative overflow-hidden">
-              <Image src="" alt="" fill objectFit="cover" />
+              <Image src={""} alt="" fill objectFit="cover" />
 
               <Dialog>
                 <DialogTrigger asChild>
