@@ -32,30 +32,30 @@ const ProductsPage = () => {
   const getCategories = async () => {
     const result = await fetch("http://localhost:3000/api/categories");
     const responseData = await result.json();
-    console.log({ responseData });
     const { data } = responseData;
-
     setCategories(data);
   };
   useEffect(() => {
     getCategories();
   }, []);
 
-  const addCategoryHandler = () => {
-    // console.log({ categoryName });
-    fetch("http://localhost:3000/api/create-category", {
+  const categoryNameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setCategoryName(e.target.value);
+  };
+
+  const createCategoryHandler = async () => {
+    const result = await fetch("http://localhost:3000/api/categories", {
       method: "POST",
+      mode: "no-cors",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ categoryName }),
     });
-    setCategoryName("");
-    // alert("New Category is being added to the menu");
-  };
-
-  const categoryNameHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setCategoryName(e.target.value);
+    setOpen(false);
+    if (result.ok) {
+      getCategories();
+    } // alert("New Category is being added to the menu");
   };
 
   return (
@@ -66,10 +66,9 @@ const ProductsPage = () => {
             <p className="text-xl leading-7 font-semibold text-foreground w-full">
               Dishes category
             </p>
-            {categories.map((category, i) => (
+            {categories.map((category) => (
               <Button
                 type="button"
-                key={i}
                 variant={"outline"}
                 className="rounded-full px-4 py-2"
               >
@@ -84,12 +83,13 @@ const ProductsPage = () => {
               </Button>
             ))}
 
-            <Dialog open={open} onOpenChange={setOpen}>
+            <Dialog open={open}>
               <DialogTrigger asChild>
                 <Button
                   type="button"
                   variant={"destructive"}
                   className="w-9 h-9 rounded-full bg-red-500"
+                  onClick={() => setOpen(true)}
                 >
                   <GoPlus size={16} />
                 </Button>
@@ -122,16 +122,18 @@ const ProductsPage = () => {
                     type="text"
                     placeholder="Type category name..."
                     className="text-sm leading-5 py-2"
-                    defaultValue={categoryName}
+                    // defaultValue={categoryName}
                     value={categoryName}
-                    onChange={categoryNameHandler}
+                    onChange={categoryNameChangeHandler}
                   />
                 </div>
                 <DialogFooter className="mt-6">
                   <Button
                     type="button"
-                    onClick={addCategoryHandler}
-                    onKeyDown={(e) => e.key === "Enter" && addCategoryHandler()}
+                    onClick={createCategoryHandler}
+                    onKeyDown={(e) =>
+                      e.key === "Enter" && createCategoryHandler()
+                    }
                   >
                     <p className="leading-5">Add category</p>
                   </Button>
@@ -140,7 +142,7 @@ const ProductsPage = () => {
             </Dialog>
           </div>
         </div>
-        <CreateFoodDialog />
+        {/* <CreateFoodDialog /> */}
       </div>
     </AdminLayout>
   );
