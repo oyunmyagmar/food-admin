@@ -31,7 +31,7 @@ const ProductsPage = () => {
 
   const addCategoryHandler = () => {
     // console.log({ categoryName });
-    fetch("http://localhost:3000/create-category", {
+    fetch("http://localhost:3000/api/create-category", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -47,7 +47,7 @@ const ProductsPage = () => {
   };
 
   const getCategories = async () => {
-    const result = await fetch("http://localhost:3000/categories");
+    const result = await fetch("http://localhost:3000/api/categories");
     const responseData = await result.json();
     const { data } = responseData;
     setCategories(data);
