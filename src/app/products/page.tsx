@@ -29,6 +29,18 @@ const ProductsPage = () => {
   const [categoryName, setCategoryName] = useState<string>("");
   const [categories, setCategories] = useState<FoodCategory[]>([]);
 
+  const getCategories = async () => {
+    const result = await fetch("http://localhost:3000/api/categories");
+    const responseData = await result.json();
+    console.log({ responseData });
+    const { data } = responseData;
+
+    setCategories(data);
+  };
+  useEffect(() => {
+    getCategories();
+  }, []);
+
   const addCategoryHandler = () => {
     // console.log({ categoryName });
     fetch("http://localhost:3000/api/create-category", {
@@ -45,16 +57,6 @@ const ProductsPage = () => {
   const categoryNameHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setCategoryName(e.target.value);
   };
-
-  const getCategories = async () => {
-    const result = await fetch("http://localhost:3000/api/categories");
-    const responseData = await result.json();
-    const { data } = responseData;
-    setCategories(data);
-  };
-  useEffect(() => {
-    getCategories();
-  }, []);
 
   return (
     <AdminLayout>
