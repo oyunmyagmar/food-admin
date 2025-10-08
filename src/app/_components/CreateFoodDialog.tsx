@@ -34,6 +34,7 @@ interface Food {
 
 export const CreateFoodDialog = () => {
   const [isOpen, setIsOpen] = useState(false);
+
   const [preview, setPreview] = useState("");
 
   const [foodName, setFoodName] = useState<string>("");
@@ -85,6 +86,7 @@ export const CreateFoodDialog = () => {
   useEffect(() => {
     getFoods();
   }, []);
+
   return (
     <div>
       <div className="p-5 bg-background rounded-xl">
