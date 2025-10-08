@@ -4,7 +4,6 @@ import {
   Button,
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -23,7 +22,7 @@ import { IoCloseOutline } from "react-icons/io5";
 
 interface Food {
   foodId?: {};
-  foodName: string; // foodName bolgoj solih
+  foodName: string;
   price: number;
   image?: string;
   ingredients: string;
@@ -34,7 +33,6 @@ interface Food {
 
 export const CreateFoodDialog = () => {
   const [isOpen, setIsOpen] = useState(false);
-
   const [preview, setPreview] = useState("");
 
   const [foodName, setFoodName] = useState<string>("");
@@ -52,22 +50,17 @@ export const CreateFoodDialog = () => {
     }
   }
 
-  const addFoodHandler = () => {
-    // console.log({ name, price, ingredients });
-    fetch("http://localhost:3000/create-food", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ foodName, price, ingredients }),
-    });
-    setFoodName("");
-    setPrice(0);
-    setIngredients("");
-    // alert("New dish is being added to the menu");
+  const getFoods = async () => {
+    const result = await fetch("http://localhost:3000/api/foods");
+    const response = await result.json();
+    const { data } = response;
+    setFoods(data);
   };
+  useEffect(() => {
+    getFoods();
+  }, []);
 
-  const foodNameHandler = (e: ChangeEvent<HTMLInputElement>) => {
+  const foodNameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setFoodName(e.target.value);
   };
   const priceChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -77,27 +70,39 @@ export const CreateFoodDialog = () => {
     setIngredients(e.target.value);
   };
 
-  const getFoods = async () => {
-    const result = await fetch("http://localhost:3000/foods");
-    const responseData = await result.json();
-    const { data } = responseData;
-    setFoods(data);
+  const createFoodHandler = async () => {
+    const result = await fetch("http://localhost:3000/api/foods", {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ foodName, price, ingredients }),
+    });
+    setFoodName("");
+    setPrice(0);
+    setIngredients("");
+    setIsOpen(false);
+    // if (result.ok) {
+    await getFoods();
+    // }
   };
-  useEffect(() => {
-    getFoods();
-  }, []);
 
   return (
     <div>
       <div className="p-5 bg-background rounded-xl">
-        <div className="flex gap-2">
-          <p>Appetizers</p>
-          <span>(6)</span>
-        </div>
         <div className="flex flex-wrap gap-4">
-          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+          <div className="w-full flex gap-2">
+            <p>Appetizers</p>
+            <span>(6)</span>
+          </div>
+
+          <Dialog open={isOpen}>
             <DialogTrigger asChild>
-              <div className="w-[270.75px] h-[241px] py-2 px-4 border border-dashed border-red-500 flex flex-col items-center justify-center gap-6 rounded-[20px]">
+              <div
+                className="w-[270.75px] h-[241px] py-2 px-4 border border-dashed border-red-500 flex flex-col items-center justify-center gap-6 rounded-[20px]"
+                onClick={() => setIsOpen(true)}
+              >
                 <Button
                   type="button"
                   variant="destructive"
@@ -125,7 +130,6 @@ export const CreateFoodDialog = () => {
                     <IoCloseOutline size={16} />
                   </Button>
                 </DialogTitle>
-                <DialogDescription className="hidden" />
               </DialogHeader>
 
               <div className="flex gap-6">
@@ -134,14 +138,14 @@ export const CreateFoodDialog = () => {
                     Food name
                   </Label>
                   <Input
-                    id="name"
-                    name="name"
+                    id="foodName"
+                    name="foodName"
                     type="text"
                     placeholder="Type food name"
                     className="text-sm leading-5 py-2"
-                    defaultValue={foodName}
+                    // defaultValue={foodName}
                     value={foodName}
-                    onChange={foodNameHandler}
+                    onChange={foodNameChangeHandler}
                   />
                 </div>
                 <div className="w-1/2 flex flex-col gap-2">
@@ -154,7 +158,7 @@ export const CreateFoodDialog = () => {
                     type="number"
                     placeholder="Enter price..."
                     className="text-sm leading-5 py-2"
-                    defaultValue="0"
+                    // defaultValue="0"
                     value={price}
                     onChange={priceChangeHandler}
                   />
@@ -170,7 +174,7 @@ export const CreateFoodDialog = () => {
                   name="ingredients"
                   placeholder="List ingredients..."
                   className="text-sm leading-5 h-[90px]"
-                  defaultValue={ingredients}
+                  // defaultValue={ingredients}
                   value={ingredients}
                   onChange={ingredientsChangeHandler}
                 />
@@ -218,8 +222,8 @@ export const CreateFoodDialog = () => {
               <DialogFooter className="mt-6">
                 <Button
                   type="button"
-                  onClick={addFoodHandler}
-                  onKeyDown={(e) => e.key === "Enter" && addFoodHandler()}
+                  onClick={createFoodHandler}
+                  onKeyDown={(e) => e.key === "Enter" && createFoodHandler()}
                 >
                   <p className="leading-5">Add Dish</p>
                 </Button>
@@ -227,12 +231,15 @@ export const CreateFoodDialog = () => {
             </DialogContent>
           </Dialog>
 
-          {/* Garch ireh card + edit card */}
+          {/* After Add garch ireh card => edit card */}
 
           {foods.map((food) => (
-            <div className="w-[270.75px] p-4 border border-border rounded-[20px] flex flex-col gap-5">
+            <div
+              key={food.foodName}
+              className="w-[270.75px] p-4 border border-border rounded-[20px] flex flex-col gap-5"
+            >
               <div className="w-[238.75px] h-[129px] rounded-xl relative overflow-hidden">
-                <Image src={""} alt="" fill objectFit="cover" />
+                <Image src={preview} alt="" fill objectFit="cover" />
 
                 <Dialog>
                   <DialogTrigger asChild>
@@ -246,7 +253,6 @@ export const CreateFoodDialog = () => {
                   <DialogContent>
                     <DialogHeader>
                       <DialogTitle>Dishes info</DialogTitle>
-                      <DialogDescription className="hidden" />
                     </DialogHeader>
                     <div>
                       <p>Dish name</p>
