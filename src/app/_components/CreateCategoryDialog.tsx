@@ -29,7 +29,7 @@ export const CreateCategoryDialog = () => {
   const [categories, setCategories] = useState<FoodCategory[]>([]);
 
   const getCategories = async () => {
-    const result = await fetch("http://localhost:3000/api/categories");
+    const result = await fetch("http://localhost:4000/api/categories");
     const responseData = await result.json();
     const { data } = responseData;
     setCategories(data);
@@ -44,7 +44,7 @@ export const CreateCategoryDialog = () => {
 
   const createCategoryHandler = async () => {
     try {
-      const result = await fetch("http://localhost:3000/api/categories", {
+      await fetch("http://localhost:4000/api/categories", {
         method: "POST",
         mode: "no-cors",
         headers: {
@@ -61,6 +61,16 @@ export const CreateCategoryDialog = () => {
       console.log(error);
     }
   };
+
+  // const deleteCategoryHandler = async (categoryName: string) => {
+  //   await fetch("http://localhost:4000/api/categories", {
+  //     method: "DELETE",
+  //     mode: "cors",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({ categoryName }),
+  //   });
+  // };
+
   return (
     <div className="p-6 bg-background rounded-xl">
       <div className="flex flex-wrap gap-3">
@@ -83,7 +93,9 @@ export const CreateCategoryDialog = () => {
               <Badge className="rounded-full px-2.5">
                 <p className="leading-4 font-semibold">{100}</p>
               </Badge>
-              <div>
+              <div
+              // onClick={() => deleteCategoryHandler(category.categoryName)}
+              >
                 <IoCloseOutline />
               </div>
             </div>

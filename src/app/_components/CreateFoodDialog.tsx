@@ -10,7 +10,6 @@ import {
   DialogFooter,
   Input,
   Textarea,
-  Badge,
   Label,
 } from "@/components/ui";
 import Image from "next/image";
@@ -33,32 +32,32 @@ interface Food {
 
 export const CreateFoodDialog = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [preview, setPreview] = useState("");
-
+  const [preview, setPreview] = useState<string>("");
   const [foodName, setFoodName] = useState<string>("");
   const [price, setPrice] = useState<number>(0);
   const [ingredients, setIngredients] = useState<string>("");
-  const [image, setImage] = useState<File | undefined>();
+  const [category, setCategory] = useState<string>("");
+  const [image, setImage] = useState<File | undefined | string>();
 
   const [foods, setFoods] = useState<Food[]>([]);
 
-  function imageChangeHandler(event: React.ChangeEvent<HTMLInputElement>) {
-    if (event.target.files?.[0]) {
-      const file = event.target.files[0];
-      const filePreview = URL.createObjectURL(file);
-      setPreview(filePreview);
-    }
-  }
+  // function imageChangeHandler(event: React.ChangeEvent<HTMLInputElement>) {
+  //   if (event.target.files?.[0]) {
+  //     const file = event.target.files[0];
+  //     const filePreview = URL.createObjectURL(file);
+  //     setPreview(filePreview);
+  //   }
+  // }
 
-  const getFoods = async () => {
-    const result = await fetch("http://localhost:3000/api/foods");
-    const response = await result.json();
-    const { data } = response;
-    setFoods(data);
-  };
-  useEffect(() => {
-    getFoods();
-  }, []);
+  // const getFoods = async () => {
+  //   const result = await fetch("http://localhost:4000/api/foods");
+  //   const response = await result.json();
+  //   const { data } = response;
+  //   setFoods(data);
+  // };
+  // useEffect(() => {
+  //   getFoods();
+  // }, []);
 
   const foodNameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setFoodName(e.target.value);
@@ -69,23 +68,73 @@ export const CreateFoodDialog = () => {
   const ingredientsChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setIngredients(e.target.value);
   };
+  const categoryChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setCategory(e.target.value);
+  };
+  const fileChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setImage(e.target.files[0]);
+      const filePreview = URL.createObjectURL(e.target.files[0]);
+      setPreview(filePreview);
+    }
+  };
 
   const createFoodHandler = async () => {
-    const result = await fetch("http://localhost:3000/api/foods", {
-      method: "POST",
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ foodName, price, ingredients }),
-    });
-    setFoodName("");
-    setPrice(0);
-    setIngredients("");
-    setIsOpen(false);
-    // if (result.ok) {
-    await getFoods();
-    // }
+    if (!foodName || !price || !image || !ingredients || !category) {
+      alert("All fields are required");
+      return;
+    }
+
+    const form = new FormData();
+
+    form.append("foodName", foodName);
+    console.log("foodName", foodName);
+    form.append("price", String(price));
+    console.log("price", String(price));
+    form.append("ingredients", ingredients);
+    console.log("ingredients", ingredients);
+    form.append("category", category);
+    console.log("category", category);
+    form.append("image", image); // File object
+    console.log("image", image);
+
+    try {
+      const response = await fetch("http://localhost:4000/api/foods", {
+        method: "POST",
+        mode: "no-cors",
+        body: form,
+      });
+
+      const data = await response.json();
+      // if (response.ok) {
+      //   alert("Food created successfully!");
+      //   setFoodName("");
+      //   setPrice(0);
+      //   setIngredients("");
+      //   setCategory("");
+      //   setImage(undefined);
+      // } else {
+      //   alert(data.error || "Failed to create food");
+      // }
+    } catch (error) {
+      alert("Failed to create food");
+    }
+
+    // const result = await fetch("http://localhost:4000/api/foods", {
+    //   method: "POST",
+    //   mode: "no-cors",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({ foodName, price, ingredients }),
+    // });
+    // setFoodName("");
+    // setPrice(0);
+    // setIngredients("");
+    // setIsOpen(false);
+    // // if (result.ok) {
+    // await getFoods();
+    // // }
   };
 
   return (
@@ -181,10 +230,26 @@ export const CreateFoodDialog = () => {
               </div>
 
               <div className="flex flex-col gap-2">
+                <Label htmlFor="category" className="text-foreground">
+                  Category
+                </Label>
+                <Input
+                  id="category"
+                  name="category"
+                  type="text"
+                  placeholder="Enter category..."
+                  className="text-sm leading-5 py-2"
+                  // defaultValue="0"
+                  value={category}
+                  onChange={categoryChangeHandler}
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
                 <Label htmlFor="image" className="text-foreground">
                   Food image
                 </Label>
-                {preview ? (
+                {image ? (
                   <div className="w-full h-[138px] rounded-md relative overflow-hidden">
                     <Image src={preview} alt="" fill objectFit="cover" />
                     <Button
@@ -192,7 +257,7 @@ export const CreateFoodDialog = () => {
                       variant="outline"
                       className="absolute w-9 h-9 rounded-full right-2 top-2"
                       onClick={() => {
-                        setPreview("");
+                        setImage("");
                       }}
                     >
                       <IoCloseOutline className="size-[16px]" />
@@ -205,7 +270,7 @@ export const CreateFoodDialog = () => {
                       name="image"
                       type="file"
                       className="absolute inset-0 opacity-0"
-                      onChange={imageChangeHandler}
+                      onChange={fileChangeHandler}
                     />
                     <div className="flex flex-col justify-center items-center gap-2">
                       <div className="w-8 h-8 rounded-full bg-background flex justify-center items-center">
