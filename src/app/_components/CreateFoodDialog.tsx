@@ -4,6 +4,7 @@ import {
   Button,
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -19,68 +20,58 @@ import { LuTrash } from "react-icons/lu";
 import { GoPlus } from "react-icons/go";
 import { IoCloseOutline } from "react-icons/io5";
 
+// tur zuur
 interface Food {
-  foodId?: {};
+  foodId?: number;
   foodName: string;
   price: number;
   image?: string;
   ingredients: string;
-  category?: {};
+  category?: string;
   createdAt?: Date;
   updated?: Date;
 }
+// tur zuur
 
 export const CreateFoodDialog = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [preview, setPreview] = useState<string>("");
+  const [editIsOpen, setEditIsOpen] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string>("");
   const [foodName, setFoodName] = useState<string>("");
   const [price, setPrice] = useState<number>(0);
   const [ingredients, setIngredients] = useState<string>("");
   const [category, setCategory] = useState<string>("");
   const [image, setImage] = useState<File | undefined | string>();
 
+  // tur zuur
   const [foods, setFoods] = useState<Food[]>([]);
-
-  // function imageChangeHandler(event: React.ChangeEvent<HTMLInputElement>) {
-  //   if (event.target.files?.[0]) {
-  //     const file = event.target.files[0];
-  //     const filePreview = URL.createObjectURL(file);
-  //     setPreview(filePreview);
-  //   }
-  // }
+  const dishes = [
+    {
+      foodName: "Grilled Chicken cobb salad",
+      price: 10,
+      ingredients:
+        "Fluffy pancakes stacked with fruits, cream, syrup, and powdered sugar.",
+    },
+  ];
+  useEffect(() => {
+    setFoods(dishes);
+  }, []);
+  // tur zuur
 
   // const getFoods = async () => {
   //   const result = await fetch("http://localhost:4000/api/foods");
   //   const response = await result.json();
   //   const { data } = response;
+  //   console.log(data, "data");
   //   setFoods(data);
   // };
   // useEffect(() => {
   //   getFoods();
   // }, []);
+  // tur zuur
 
-  const foodNameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setFoodName(e.target.value);
-  };
-  const priceChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setPrice(Number(e.target.value));
-  };
-  const ingredientsChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setIngredients(e.target.value);
-  };
-  const categoryChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setCategory(e.target.value);
-  };
-  const fileChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setImage(e.target.files[0]);
-      const filePreview = URL.createObjectURL(e.target.files[0]);
-      setPreview(filePreview);
-    }
-  };
-
-  const createFoodHandler = async () => {
-    if (!foodName || !price || !image || !ingredients || !category) {
+  const addFoodHandler = async () => {
+    if (!foodName || !price || !ingredients || !category || !image) {
       alert("All fields are required");
       return;
     }
@@ -88,15 +79,15 @@ export const CreateFoodDialog = () => {
     const form = new FormData();
 
     form.append("foodName", foodName);
-    console.log("foodName", foodName);
+    // console.log("foodName", foodName);
     form.append("price", String(price));
-    console.log("price", String(price));
+    // console.log("price", String(price));
     form.append("ingredients", ingredients);
-    console.log("ingredients", ingredients);
+    // console.log("ingredients", ingredients);
     form.append("category", category);
-    console.log("category", category);
+    // console.log("category", category);
     form.append("image", image); // File object
-    console.log("image", image);
+    // console.log("image", image);
 
     try {
       const response = await fetch("http://localhost:4000/api/foods", {
@@ -106,6 +97,15 @@ export const CreateFoodDialog = () => {
       });
 
       const data = await response.json();
+      console.log(data, "data");
+      alert("Food created successfully!");
+      setFoodName("");
+      setPrice(0);
+      setIngredients("");
+      setCategory("");
+      setImage(undefined);
+      setIsOpen(false);
+
       // if (response.ok) {
       //   alert("Food created successfully!");
       //   setFoodName("");
@@ -137,239 +137,398 @@ export const CreateFoodDialog = () => {
     // // }
   };
 
-  return (
-    <div>
-      <div className="p-5 bg-background rounded-xl">
-        <div className="flex flex-wrap gap-4">
-          <div className="w-full flex gap-2">
-            <p>Appetizers</p>
-            <span>(6)</span>
-          </div>
+  const foodNameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setFoodName(e.target.value);
+  };
+  const priceChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setPrice(Number(e.target.value));
+  };
+  const ingredientsChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setIngredients(e.target.value);
+  };
+  const categoryChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setCategory(e.target.value);
+  };
+  const fileChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setImage(e.target.files[0]);
+      const filePreview = URL.createObjectURL(e.target.files[0]);
+      setImagePreview(filePreview);
+    }
+  };
 
-          <Dialog open={isOpen}>
-            <DialogTrigger asChild>
-              <div
-                className="w-[270.75px] h-[241px] py-2 px-4 border border-dashed border-red-500 flex flex-col items-center justify-center gap-6 rounded-[20px]"
-                onClick={() => setIsOpen(true)}
+  return (
+    <div className="p-5 bg-background rounded-xl">
+      <div className="flex flex-wrap gap-4">
+        <div className="w-full flex gap-2">
+          <p>"{"Appetizers"}"</p>
+          <span>(6)</span>
+        </div>
+
+        <Dialog open={isOpen}>
+          <DialogTrigger asChild>
+            <div
+              className="w-[270.75px] h-[241px] py-2 px-4 border border-dashed border-red-500 flex flex-col items-center justify-center gap-6 rounded-[20px]"
+              onClick={() => setIsOpen(true)}
+            >
+              <Button
+                type="button"
+                variant="destructive"
+                className="w-10 h-10 rounded-full bg-red-500"
               >
+                <GoPlus size={16} />
+              </Button>
+              <p className="w-[154px] text-center text-sm leading-5 font-medium text-secondary-foreground">
+                Add new Dish to "{"Appetizers"}"
+              </p>
+            </div>
+          </DialogTrigger>
+
+          <DialogContent className="w-115 gap-6 rounded-xl">
+            <DialogHeader className="gap-0">
+              <DialogTitle className="flex gap-2.5 items-center mb-4">
+                <p className="flex-1 leading-7 text-foreground">
+                  Add new Dish to "{"Appetizers"}"
+                </p>
                 <Button
                   type="button"
-                  variant="destructive"
-                  className="w-10 h-10 rounded-full bg-red-500"
+                  variant="secondary"
+                  className="w-9 h-9 rounded-full"
+                  onClick={() => setIsOpen(false)}
                 >
-                  <GoPlus size={16} />
+                  <IoCloseOutline size={16} />
                 </Button>
-                <p className="w-[154px] text-center text-sm leading-5 font-medium text-secondary-foreground">
-                  Add new Dish to Appetizers
-                </p>
+              </DialogTitle>
+              <DialogDescription className="hidden" />
+            </DialogHeader>
+
+            <div className="flex gap-6">
+              <div className="w-1/2 flex flex-col gap-2">
+                <Label htmlFor="foodName" className="text-foreground">
+                  Food name
+                </Label>
+                <Input
+                  id="foodName"
+                  name="foodName"
+                  type="text"
+                  placeholder="Type food name"
+                  className="text-sm leading-5 py-2"
+                  value={foodName}
+                  onChange={foodNameChangeHandler}
+                />
               </div>
-            </DialogTrigger>
-            <DialogContent className="w-115 gap-6 rounded-xl">
-              <DialogHeader className="gap-0">
-                <DialogTitle className="flex gap-2.5 items-center mb-4">
-                  <p className="flex-1 leading-7 text-foreground">
-                    Add new Dish to Appetizers
-                  </p>
+              <div className="w-1/2 flex flex-col gap-2">
+                <Label htmlFor="price" className="text-foreground">
+                  Food price
+                </Label>
+                <Input
+                  id="price"
+                  name="price"
+                  type="number"
+                  placeholder="Enter price..."
+                  className="text-sm leading-5 py-2"
+                  value={price}
+                  onChange={priceChangeHandler}
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="ingredients" className="text-foreground">
+                Ingredients
+              </Label>
+              <Textarea
+                id="ingredients"
+                name="ingredients"
+                placeholder="List ingredients..."
+                className="text-sm leading-5 h-[90px]"
+                value={ingredients}
+                onChange={ingredientsChangeHandler}
+              />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="category" className="text-foreground">
+                Category
+              </Label>
+              <Input
+                id="category"
+                name="category"
+                type="text"
+                placeholder="Enter category..."
+                className="text-sm leading-5 py-2"
+                value={category}
+                onChange={categoryChangeHandler}
+              />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="image" className="text-foreground">
+                Food image
+              </Label>
+              {image ? (
+                <div className="w-full h-[138px] rounded-md relative overflow-hidden">
+                  <Image
+                    src={imagePreview}
+                    alt="imagePreview"
+                    fill
+                    objectFit="cover"
+                  />
                   <Button
                     type="button"
-                    variant="secondary"
-                    className="w-9 h-9 rounded-full"
-                    onClick={() => setIsOpen(false)}
+                    variant="outline"
+                    className="absolute w-9 h-9 rounded-full right-2 top-2"
+                    onClick={() => {
+                      setImage("");
+                    }}
                   >
                     <IoCloseOutline size={16} />
                   </Button>
-                </DialogTitle>
-              </DialogHeader>
-
-              <div className="flex gap-6">
-                <div className="w-1/2 flex flex-col gap-2">
-                  <Label htmlFor="name" className="text-foreground">
-                    Food name
-                  </Label>
-                  <Input
-                    id="foodName"
-                    name="foodName"
-                    type="text"
-                    placeholder="Type food name"
-                    className="text-sm leading-5 py-2"
-                    // defaultValue={foodName}
-                    value={foodName}
-                    onChange={foodNameChangeHandler}
-                  />
                 </div>
-                <div className="w-1/2 flex flex-col gap-2">
-                  <Label htmlFor="price" className="text-foreground">
-                    Food price
-                  </Label>
-                  <Input
-                    id="price"
-                    name="price"
-                    type="number"
-                    placeholder="Enter price..."
-                    className="text-sm leading-5 py-2"
-                    // defaultValue="0"
-                    value={price}
-                    onChange={priceChangeHandler}
+              ) : (
+                <div className="w-full h-[138px] bg-[#2563EB]/5 flex justify-center items-center p-4 rounded-md border border-dashed border-[#2563EB]/20 relative">
+                  <input
+                    id="image"
+                    name="image"
+                    type="file"
+                    className="absolute inset-0 opacity-0"
+                    onChange={fileChangeHandler}
                   />
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="ingredients" className="text-foreground">
-                  Ingredients
-                </Label>
-                <Textarea
-                  id="ingredients"
-                  name="ingredients"
-                  placeholder="List ingredients..."
-                  className="text-sm leading-5 h-[90px]"
-                  // defaultValue={ingredients}
-                  value={ingredients}
-                  onChange={ingredientsChangeHandler}
-                />
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="category" className="text-foreground">
-                  Category
-                </Label>
-                <Input
-                  id="category"
-                  name="category"
-                  type="text"
-                  placeholder="Enter category..."
-                  className="text-sm leading-5 py-2"
-                  // defaultValue="0"
-                  value={category}
-                  onChange={categoryChangeHandler}
-                />
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="image" className="text-foreground">
-                  Food image
-                </Label>
-                {image ? (
-                  <div className="w-full h-[138px] rounded-md relative overflow-hidden">
-                    <Image src={preview} alt="" fill objectFit="cover" />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="absolute w-9 h-9 rounded-full right-2 top-2"
-                      onClick={() => {
-                        setImage("");
-                      }}
-                    >
-                      <IoCloseOutline className="size-[16px]" />
-                    </Button>
+                  <div className="flex flex-col justify-center items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-background flex justify-center items-center">
+                      <LuImage size={16} />
+                    </div>
+                    <p className="text-sm leading-5 font-medium text-primary">
+                      Choose a file or drag & drop it here
+                    </p>
                   </div>
-                ) : (
-                  <div className="w-full h-[138px] bg-[#2563EB]/5 flex justify-center items-center p-4 rounded-md border border-dashed border-[#2563EB]/20 relative">
-                    <input
-                      id="image"
-                      name="image"
-                      type="file"
-                      className="absolute inset-0 opacity-0"
-                      onChange={fileChangeHandler}
-                    />
-                    <div className="flex flex-col justify-center items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-background flex justify-center items-center">
-                        <LuImage size={16} />
-                      </div>
-                      <p className="text-sm leading-5 font-medium text-primary">
-                        Choose a file or drag & drop it here
+                </div>
+              )}
+            </div>
+
+            <DialogFooter className="mt-6">
+              <Button
+                type="button"
+                size={"lg"}
+                className="w-fit leading-5 px-4"
+                onClick={addFoodHandler}
+                // onKeyDown={(e) => (e.key === "Enter" ? addFoodHandler() : "")} // onkeydown need redo!
+              >
+                Add Dish
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* After Add garch ireh card => edit card */}
+
+        {foods.map((food) => (
+          <div
+            key={food.foodName}
+            className="w-[270.75px] p-4 border border-border rounded-[20px] flex flex-col gap-5"
+          >
+            <div className="w-full h-[129px] rounded-xl relative overflow-hidden">
+              <Image
+                src={imagePreview}
+                alt="imagePreview"
+                fill
+                objectFit="cover"
+              />
+
+              <Dialog open={editIsOpen}>
+                <DialogTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="absolute w-11 h-11 rounded-full bottom-5 right-5"
+                    onClick={() => setEditIsOpen(true)}
+                  >
+                    <LuPen size={16} className="text-red-500" />
+                  </Button>
+                </DialogTrigger>
+
+                <DialogContent className="w-118 gap-3 rounded-xl">
+                  <DialogHeader className="gap-0">
+                    <DialogTitle className="flex gap-2.5 items-center">
+                      <p className="flex-1 leading-7 text-foreground">
+                        Dishes info
                       </p>
+                      <Button
+                        variant={"secondary"}
+                        className="w-9 h-9 rounded-full"
+                        onClick={() => setEditIsOpen(false)}
+                      >
+                        <IoCloseOutline size={16} />
+                      </Button>
+                    </DialogTitle>
+                    <DialogDescription className="hidden" />
+                  </DialogHeader>
+
+                  <div>
+                    <div className="flex gap-4 my-3">
+                      <Label
+                        htmlFor="foodName"
+                        className="w-30 text-xs leading-4 font-normal text-muted-foreground flex items-start"
+                      >
+                        Dish name
+                      </Label>
+                      <Input
+                        id="foodName"
+                        name="foodName"
+                        type="text"
+                        className="text-sm leading-5 py-2"
+                        defaultValue={foodName}
+                        onChange={foodNameChangeHandler}
+                      />
+                    </div>
+
+                    <div className="flex gap-4 my-3">
+                      <Label
+                        htmlFor="category"
+                        className="w-30 text-xs leading-4 font-normal text-muted-foreground flex items-start"
+                      >
+                        Dish category
+                      </Label>
+                      <Input
+                        id="category"
+                        name="category"
+                        type="text"
+                        className="text-sm leading-5 py-2"
+                        value={category}
+                        onChange={categoryChangeHandler}
+                      />
+                    </div>
+
+                    <div className="flex gap-4 my-3">
+                      <Label
+                        htmlFor="ingredients"
+                        className="w-30 text-xs leading-4 font-normal text-muted-foreground flex items-start"
+                      >
+                        Ingredients
+                      </Label>
+                      <Textarea
+                        id="ingredients"
+                        name="ingredients"
+                        className="text-sm leading-5 h-20"
+                        value={ingredients}
+                        onChange={ingredientsChangeHandler}
+                      />
+                    </div>
+
+                    <div className="flex gap-4 my-3">
+                      <Label
+                        htmlFor="price"
+                        className="w-30 text-xs leading-4 font-normal text-muted-foreground flex items-start"
+                      >
+                        Price
+                      </Label>
+                      <Input
+                        id="price"
+                        name="price"
+                        type="number"
+                        className="text-sm leading-5 py-2"
+                        value={price}
+                        onChange={priceChangeHandler}
+                      />
+                    </div>
+
+                    <div className="flex gap-4 my-3">
+                      <Label
+                        htmlFor="image"
+                        className="w-30 text-xs leading-4 font-normal text-muted-foreground flex items-start"
+                      >
+                        Image
+                      </Label>
+
+                      {image ? (
+                        <div className="w-full h-29 rounded-md relative overflow-hidden">
+                          <Image
+                            src={imagePreview}
+                            alt="imagePreview"
+                            fill
+                            objectFit="cover"
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            className="absolute w-9 h-9 rounded-full right-2 top-2"
+                            onClick={() => {
+                              setImage("");
+                            }}
+                          >
+                            <IoCloseOutline size={16} />
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="w-full h-29 bg-[#2563EB]/5 flex justify-center items-center p-4 rounded-md border border-dashed border-[#2563EB]/20 relative">
+                          <input
+                            id="image"
+                            name="image"
+                            type="file"
+                            className="absolute inset-0 opacity-0"
+                            onChange={fileChangeHandler}
+                          />
+                          <div className="flex flex-col justify-center items-center gap-2">
+                            <div className="w-8 h-8 rounded-full bg-background flex justify-center items-center">
+                              <LuImage size={16} />
+                            </div>
+                            <p className="text-sm leading-5 font-medium text-primary">
+                              Choose a file or drag & drop it here
+                            </p>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
-                )}
-              </div>
 
-              <DialogFooter className="mt-6">
-                <Button
-                  type="button"
-                  onClick={createFoodHandler}
-                  onKeyDown={(e) => e.key === "Enter" && createFoodHandler()}
-                >
-                  <p className="leading-5">Add Dish</p>
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-
-          {/* After Add garch ireh card => edit card */}
-
-          {foods.map((food) => (
-            <div
-              key={food.foodName}
-              className="w-[270.75px] p-4 border border-border rounded-[20px] flex flex-col gap-5"
-            >
-              <div className="w-[238.75px] h-[129px] rounded-xl relative overflow-hidden">
-                <Image src={preview} alt="" fill objectFit="cover" />
-
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className="absolute w-11 h-11 rounded-full bottom-5 right-5"
-                    >
-                      <LuPen />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Dishes info</DialogTitle>
-                    </DialogHeader>
-                    <div>
-                      <p>Dish name</p>
-                      <Input></Input>
-                    </div>
-                    <div>
-                      <p>Dish category</p>
-                      <Input></Input>
-                    </div>
-                    <div>
-                      <p>Ingredients</p>
-                      <Input></Input>
-                    </div>
-                    <div>
-                      <p>Price</p>
-                      <Input></Input>
-                    </div>
-                    <div>
-                      <p>Image</p>
-                      <Input></Input>
-                    </div>
-
-                    <DialogFooter>
+                  <DialogFooter className="mt-6">
+                    <div className="w-full flex justify-between items-center">
                       <Button
                         type="button"
+                        size={"lg"}
                         variant="outline"
                         className="border-destructive"
                       >
-                        <LuTrash className="text-destructive" />
+                        <LuTrash size={16} className="text-destructive" />
                       </Button>
-                      <Button type="button">Save changes</Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
-              </div>
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-2.5">
-                  <div className="text-sm leading-5 font-medium text-red-500 flex-1 items-center">
-                    {food.foodName}
-                  </div>
-                  <div className="text-xs leading-4 text-foreground">
-                    ${food.price}
-                  </div>
+
+                      <Button
+                        type="button"
+                        size={"lg"}
+                        className="w-fit leading-5 py-2.5 px-4"
+                      >
+                        Save changes
+                      </Button>
+                    </div>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2.5">
+                <div className="text-sm leading-5 font-medium text-red-500 flex-1 items-center">
+                  {food.foodName}
                 </div>
                 <div className="text-xs leading-4 text-foreground">
-                  {food.ingredients}
+                  ${food.price}
                 </div>
               </div>
+              <div className="text-xs leading-4 text-foreground">
+                {food.ingredients}
+              </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   );
 };
+
+// function imageChangeHandler(event: React.ChangeEvent<HTMLInputElement>) {
+//   if (event.target.files?.[0]) {
+//     const file = event.target.files[0];
+//     const filePreview = URL.createObjectURL(file);
+//     setPreview(filePreview);
+//   }
+// }

@@ -4,6 +4,7 @@ import {
   Button,
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -128,6 +129,7 @@ export const CreateCategoryDialog = () => {
                   <IoCloseOutline size={16} />
                 </Button>
               </DialogTitle>
+              <DialogDescription className="hidden" />
             </DialogHeader>
 
             <div className="flex flex-col gap-2">
