@@ -17,15 +17,13 @@ import { GoPlus } from "react-icons/go";
 import { IoCloseOutline } from "react-icons/io5";
 
 interface FoodCategory {
-  categoryName: string;
-  createdAt?: Date;
-  updated?: Date;
+  _id: string;
+  name: string;
 }
 
 export const CreateCategoryDialog = () => {
   const [open, setOpen] = useState(false);
   const [categoryName, setCategoryName] = useState<string>("");
-
   const [categories, setCategories] = useState<FoodCategory[]>([]);
 
   const getCategories = async () => {
@@ -38,10 +36,6 @@ export const CreateCategoryDialog = () => {
     getCategories();
   }, []);
 
-  const categoryNameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setCategoryName(e.target.value);
-  };
-
   const createCategoryHandler = async () => {
     if (!categoryName) {
       alert("Category name is required");
@@ -51,8 +45,7 @@ export const CreateCategoryDialog = () => {
     try {
       await fetch("http://localhost:4000/api/categories", {
         method: "POST",
-        mode: "no-cors",
-        body: JSON.stringify({ categoryName }),
+        body: JSON.stringify({ name: categoryName }),
       });
       setCategoryName("");
       setOpen(false);
@@ -62,14 +55,9 @@ export const CreateCategoryDialog = () => {
     }
   };
 
-  // const deleteCategoryHandler = async (categoryName: string) => {
-  //   await fetch("http://localhost:4000/api/categories", {
-  //     method: "DELETE",
-  //     mode: "cors",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify({ categoryName }),
-  //   });
-  // };
+  const categoryNameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setCategoryName(e.target.value);
+  };
 
   return (
     <div className="p-6 bg-background rounded-xl">
@@ -80,14 +68,14 @@ export const CreateCategoryDialog = () => {
 
         {categories.map((category) => (
           <Button
-            key={category.categoryName}
+            key={category._id}
             type="button"
             variant={"outline"}
             className="rounded-full px-4 py-2"
           >
             <div className="flex gap-2 items-center">
               <p className="leading-5 text-secondary-foreground">
-                {category.categoryName}
+                {category.name}
               </p>
 
               <Badge className="rounded-full px-2.5">
@@ -141,7 +129,6 @@ export const CreateCategoryDialog = () => {
                 type="text"
                 placeholder="Type category name..."
                 className="text-sm leading-5 py-2"
-                // defaultValue={categoryName}
                 value={categoryName}
                 onChange={categoryNameChangeHandler}
               />
