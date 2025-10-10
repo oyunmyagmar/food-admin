@@ -17,7 +17,6 @@ import { GoPlus } from "react-icons/go";
 import { IoCloseOutline } from "react-icons/io5";
 
 interface FoodCategory {
-  categoryId?: {};
   categoryName: string;
   createdAt?: Date;
   updated?: Date;
@@ -44,20 +43,20 @@ export const CreateCategoryDialog = () => {
   };
 
   const createCategoryHandler = async () => {
+    if (!categoryName) {
+      alert("Category name is required");
+      return;
+    }
+
     try {
       await fetch("http://localhost:4000/api/categories", {
         method: "POST",
         mode: "no-cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({ categoryName }),
       });
       setCategoryName("");
       setOpen(false);
-      // if (result.ok) {
       await getCategories();
-      // }
     } catch (error) {
       console.log(error);
     }

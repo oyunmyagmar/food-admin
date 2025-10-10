@@ -45,29 +45,29 @@ export const CreateFoodDialog = () => {
 
   // tur zuur
   const [foods, setFoods] = useState<Food[]>([]);
-  const dishes = [
-    {
-      foodName: "Grilled Chicken cobb salad",
-      price: 10,
-      ingredients:
-        "Fluffy pancakes stacked with fruits, cream, syrup, and powdered sugar.",
-    },
-  ];
-  useEffect(() => {
-    setFoods(dishes);
-  }, []);
+  // const dishes = [
+  //   {
+  //     foodName: "Grilled Chicken cobb salad",
+  //     price: 10,
+  //     ingredients:
+  //       "Fluffy pancakes stacked with fruits, cream, syrup, and powdered sugar.",
+  //   },
+  // ];
+  // useEffect(() => {
+  //   setFoods(dishes);
+  // }, []);
   // tur zuur
 
-  // const getFoods = async () => {
-  //   const result = await fetch("http://localhost:4000/api/foods");
-  //   const response = await result.json();
-  //   const { data } = response;
-  //   console.log(data, "data");
-  //   setFoods(data);
-  // };
-  // useEffect(() => {
-  //   getFoods();
-  // }, []);
+  const getFoods = async () => {
+    const result = await fetch("http://localhost:4000/api/foods");
+    const response = await result.json();
+    const { data } = response;
+    console.log(data, "data");
+    setFoods(data);
+  };
+  useEffect(() => {
+    getFoods();
+  }, []);
   // tur zuur
 
   const addFoodHandler = async () => {
@@ -89,36 +89,19 @@ export const CreateFoodDialog = () => {
     form.append("image", image); // File object
     // console.log("image", image);
 
-    try {
-      const response = await fetch("http://localhost:4000/api/foods", {
-        method: "POST",
-        mode: "no-cors",
-        body: form,
-      });
+    await fetch("http://localhost:4000/api/foods", {
+      method: "POST",
+      mode: "no-cors",
+      body: form,
+    });
 
-      const data = await response.json();
-      console.log(data, "data");
-      alert("Food created successfully!");
-      setFoodName("");
-      setPrice(0);
-      setIngredients("");
-      setCategory("");
-      setImage(undefined);
-      setIsOpen(false);
-
-      // if (response.ok) {
-      //   alert("Food created successfully!");
-      //   setFoodName("");
-      //   setPrice(0);
-      //   setIngredients("");
-      //   setCategory("");
-      //   setImage(undefined);
-      // } else {
-      //   alert(data.error || "Failed to create food");
-      // }
-    } catch (error) {
-      alert("Failed to create food");
-    }
+    alert("Food created successfully!");
+    setFoodName("");
+    setPrice(0);
+    setIngredients("");
+    setCategory("");
+    setImage(undefined);
+    setIsOpen(false);
 
     // const result = await fetch("http://localhost:4000/api/foods", {
     //   method: "POST",
@@ -328,12 +311,16 @@ export const CreateFoodDialog = () => {
             className="w-[270.75px] p-4 border border-border rounded-[20px] flex flex-col gap-5"
           >
             <div className="w-full h-[129px] rounded-xl relative overflow-hidden">
-              <Image
-                src={imagePreview}
-                alt="imagePreview"
-                fill
-                objectFit="cover"
-              />
+              {image ? (
+                <Image
+                  src={imagePreview}
+                  alt="imagePreview"
+                  fill
+                  objectFit="cover"
+                />
+              ) : (
+                ""
+              )}
 
               <Dialog open={editIsOpen}>
                 <DialogTrigger asChild>
