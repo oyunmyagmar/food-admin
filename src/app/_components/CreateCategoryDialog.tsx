@@ -22,36 +22,70 @@ interface FoodCategory {
 }
 
 export const CreateCategoryDialog = () => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
   const [categoryName, setCategoryName] = useState<string>("");
   const [categories, setCategories] = useState<FoodCategory[]>([]);
 
   const getCategories = async () => {
-    const result = await fetch("http://localhost:4000/api/categories");
-    const responseData = await result.json();
-    const { data } = responseData;
+    const res = await fetch("http://localhost:4000/api/categories");
+    const resData = await res.json();
+    const { data } = resData;
+
     setCategories(data);
   };
+
   useEffect(() => {
     getCategories();
   }, []);
 
   const createCategoryHandler = async () => {
     if (!categoryName) {
-      alert("Category name is required");
+      alert("Category name is required!");
       return;
     }
 
     try {
       await fetch("http://localhost:4000/api/categories", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ name: categoryName }),
       });
+
+      await getCategories();
+      alert("New Category is being added to the menu!");
       setCategoryName("");
       setOpen(false);
-      await getCategories();
     } catch (error) {
-      console.log(error);
+      console.error(error);
+    }
+  };
+
+  const deleteCategoryHandler = async (id: string) => {
+    if (confirm("Are you sure you want to delete this category?")) {
+      try {
+        const response = await fetch(
+          `http://localhost:4000/api/categories/${id}`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error(
+            `Delete failed with status ${response.status}: ${errorText}`
+          );
+          return;
+        }
+
+        const resultText = await response.text();
+        console.log(`Delete successful, ${resultText}`);
+        await getCategories();
+      } catch (error) {
+        console.error("Network or unexpected error:", error);
+      }
     }
   };
 
@@ -81,9 +115,7 @@ export const CreateCategoryDialog = () => {
               <Badge className="rounded-full px-2.5">
                 <p className="leading-4 font-semibold">{100}</p>
               </Badge>
-              <div
-              // onClick={() => deleteCategoryHandler(category.categoryName)}
-              >
+              <div onClick={() => deleteCategoryHandler(category._id)}>
                 <IoCloseOutline />
               </div>
             </div>
@@ -101,6 +133,7 @@ export const CreateCategoryDialog = () => {
               <GoPlus size={16} />
             </Button>
           </DialogTrigger>
+
           <DialogContent className="w-115 gap-6 rounded-xl">
             <DialogHeader>
               <DialogTitle className="flex gap-2.5 items-center mb-4">
@@ -133,13 +166,16 @@ export const CreateCategoryDialog = () => {
                 onChange={categoryNameChangeHandler}
               />
             </div>
+
             <DialogFooter className="mt-6">
               <Button
                 type="button"
                 onClick={createCategoryHandler}
                 onKeyDown={(e) => e.key === "Enter" && createCategoryHandler()}
+                size={"lg"}
+                className="w-fit leading-5 px-4"
               >
-                <p className="leading-5">Add category</p>
+                Add category
               </Button>
             </DialogFooter>
           </DialogContent>

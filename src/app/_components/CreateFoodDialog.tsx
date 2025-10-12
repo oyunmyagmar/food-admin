@@ -34,7 +34,7 @@ interface Food {
 // tur zuur
 
 export const CreateFoodDialog = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [editIsOpen, setEditIsOpen] = useState(false);
   const [imagePreview, setImagePreview] = useState<string>("");
   const [foodName, setFoodName] = useState<string>("");
@@ -42,82 +42,48 @@ export const CreateFoodDialog = () => {
   const [ingredients, setIngredients] = useState<string>("");
   const [category, setCategory] = useState<string>("");
   const [image, setImage] = useState<File | undefined | string>();
-
-  // tur zuur
   const [foods, setFoods] = useState<Food[]>([]);
-  // const dishes = [
-  //   {
-  //     foodName: "Grilled Chicken cobb salad",
-  //     price: 10,
-  //     ingredients:
-  //       "Fluffy pancakes stacked with fruits, cream, syrup, and powdered sugar.",
-  //   },
-  // ];
-  // useEffect(() => {
-  //   setFoods(dishes);
-  // }, []);
-  // tur zuur
 
   const getFoods = async () => {
-    const result = await fetch("http://localhost:4000/api/foods");
-    const response = await result.json();
-    const { data } = response;
+    const res = await fetch("http://localhost:4000/api/foods");
+    const resData = await res.json();
+    const { data } = resData;
     console.log(data, "data");
+
     setFoods(data);
   };
   useEffect(() => {
     getFoods();
   }, []);
-  // tur zuur
 
   const addFoodHandler = async () => {
     if (!foodName || !price || !ingredients || !category || !image) {
-      alert("All fields are required");
+      alert("All fields are required!");
       return;
     }
 
     const form = new FormData();
 
     form.append("foodName", foodName);
-    // console.log("foodName", foodName);
     form.append("price", String(price));
-    // console.log("price", String(price));
     form.append("ingredients", ingredients);
-    // console.log("ingredients", ingredients);
     form.append("category", category);
-    // console.log("category", category);
     form.append("image", image); // File object
-    // console.log("image", image);
 
     await fetch("http://localhost:4000/api/foods", {
       method: "POST",
-      mode: "no-cors",
+      // mode: "no-cors",
       body: form,
     });
 
-    alert("Food created successfully!");
+    await getFoods();
+    alert("New dish is being added to the menu!");
     setFoodName("");
     setPrice(0);
     setIngredients("");
     setCategory("");
     setImage(undefined);
     setIsOpen(false);
-
-    // const result = await fetch("http://localhost:4000/api/foods", {
-    //   method: "POST",
-    //   mode: "no-cors",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({ foodName, price, ingredients }),
-    // });
-    // setFoodName("");
-    // setPrice(0);
-    // setIngredients("");
-    // setIsOpen(false);
-    // // if (result.ok) {
-    // await getFoods();
-    // // }
   };
 
   const foodNameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -295,7 +261,6 @@ export const CreateFoodDialog = () => {
                 size={"lg"}
                 className="w-fit leading-5 px-4"
                 onClick={addFoodHandler}
-                // onKeyDown={(e) => (e.key === "Enter" ? addFoodHandler() : "")} // onkeydown need redo!
               >
                 Add Dish
               </Button>
@@ -303,7 +268,7 @@ export const CreateFoodDialog = () => {
           </DialogContent>
         </Dialog>
 
-        {/* After Add garch ireh card => edit card */}
+        {/* After Add garch ireh card => + edit card */}
 
         {foods.map((food) => (
           <div

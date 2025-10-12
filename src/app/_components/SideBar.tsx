@@ -1,7 +1,9 @@
+"use client";
 import React from "react";
 import { Button } from "@/components/ui";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { LiaTruckMovingSolid } from "react-icons/lia";
+import Link from "next/link";
 
 export const SideBar = () => {
   return (
@@ -30,13 +32,24 @@ export const SideBar = () => {
         </div>
       </div>
       <div className="flex flex-col gap-6">
-        <Button className="rounded-full gap-2.5 has-[>svg]:px-6 py-2.5 h-10">
-          <LuLayoutDashboard className="size-[22px]" />
-          <p className="w-[85px] text-left">Food menu</p>
+        <Button
+          asChild
+          className="rounded-full gap-2.5 has-[>svg]:px-6 py-2.5 h-10"
+        >
+          <Link href="/products">
+            <LuLayoutDashboard className="size-[22px]" />
+            <p className="w-[85px] text-left">Food menu</p>
+          </Link>
         </Button>
-        <Button className="rounded-full gap-2.5 has-[>svg]:px-6 py-2.5 h-10">
-          <LiaTruckMovingSolid className="size-[22px]" />
-          <p className="w-[85px] text-left">Orders</p>
+
+        <Button
+          asChild
+          className="rounded-full gap-2.5 has-[>svg]:px-6 py-2.5 h-10"
+        >
+          <Link href="/orders">
+            <LiaTruckMovingSolid className="size-[22px]" />
+            <p className="w-[85px] text-left">Orders</p>
+          </Link>
         </Button>
       </div>
     </div>
