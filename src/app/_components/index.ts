@@ -4,4 +4,5 @@ export * from "./AdminLayout";
 export * from "./CreateFoodDialog";
 export * from "./CreateCategoryDialog";
 export * from "./ChangeFoodDialog";
-export * from "./FoodCards";
+export * from "./PrintFoodCards";
+export * from "./EditFoodDialog";

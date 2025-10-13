@@ -17,10 +17,10 @@ import Image from "next/image";
 import { LuImage } from "react-icons/lu";
 import { GoPlus } from "react-icons/go";
 import { IoCloseOutline } from "react-icons/io5";
-import { FoodCards } from "./FoodCards";
+import { PrintFoodCards } from "./PrintFoodCards";
 
 interface Food {
-  foodId?: number;
+  _id: string;
   foodName: string;
   price: number;
   image: string;
@@ -70,6 +70,7 @@ export const CreateFoodDialog = () => {
       body: form,
     });
 
+    await getFoods();
     alert("New dish is being added to the menu!");
     setFoodName("");
     setPrice(0);
@@ -189,7 +190,7 @@ export const CreateFoodDialog = () => {
               />
             </div>
 
-            <div className="flex flex-col gap-2">
+            {/* <div className="flex flex-col gap-2">
               <Label htmlFor="category" className="text-foreground">
                 Category
               </Label>
@@ -202,7 +203,7 @@ export const CreateFoodDialog = () => {
                 value={category}
                 onChange={categoryChangeHandler}
               />
-            </div>
+            </div> */}
 
             <div className="flex flex-col gap-2">
               <Label htmlFor="image" className="text-foreground">
@@ -262,7 +263,7 @@ export const CreateFoodDialog = () => {
         </Dialog>
 
         {/* After Click Add FoodCards here*/}
-        <FoodCards foods={foods} />
+        <PrintFoodCards foods={foods} getFoods={getFoods} />
       </div>
     </div>
   );
