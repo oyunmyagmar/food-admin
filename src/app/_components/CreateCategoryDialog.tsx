@@ -94,93 +94,87 @@ export const CreateCategoryDialog = () => {
   };
 
   return (
-    <div className="p-6 bg-background rounded-xl">
-      <div className="flex flex-wrap gap-3">
-        <p className="text-xl leading-7 font-semibold text-foreground w-full">
-          Dishes category
-        </p>
+    <div>
+      {categories.map((category) => (
+        <Button
+          key={category._id}
+          type="button"
+          variant={"outline"}
+          className="rounded-full px-4 py-2"
+        >
+          <div className="flex gap-2 items-center">
+            <p className="leading-5 text-secondary-foreground">
+              {category.name}
+            </p>
 
-        {categories.map((category) => (
+            <Badge className="rounded-full px-2.5">
+              <p className="leading-4 font-semibold">{100}</p>
+            </Badge>
+            <div onClick={() => deleteCategoryHandler(category._id)}>
+              <IoCloseOutline />
+            </div>
+          </div>
+        </Button>
+      ))}
+
+      <Dialog open={open}>
+        <DialogTrigger asChild>
           <Button
-            key={category._id}
             type="button"
-            variant={"outline"}
-            className="rounded-full px-4 py-2"
+            variant={"destructive"}
+            className="w-9 h-9 rounded-full bg-red-500"
+            onClick={() => setOpen(true)}
           >
-            <div className="flex gap-2 items-center">
-              <p className="leading-5 text-secondary-foreground">
-                {category.name}
-              </p>
-
-              <Badge className="rounded-full px-2.5">
-                <p className="leading-4 font-semibold">{100}</p>
-              </Badge>
-              <div onClick={() => deleteCategoryHandler(category._id)}>
-                <IoCloseOutline />
-              </div>
-            </div>
+            <GoPlus size={16} />
           </Button>
-        ))}
+        </DialogTrigger>
 
-        <Dialog open={open}>
-          <DialogTrigger asChild>
-            <Button
-              type="button"
-              variant={"destructive"}
-              className="w-9 h-9 rounded-full bg-red-500"
-              onClick={() => setOpen(true)}
-            >
-              <GoPlus size={16} />
-            </Button>
-          </DialogTrigger>
-
-          <DialogContent className="w-115 gap-6 rounded-xl">
-            <DialogHeader>
-              <DialogTitle className="flex gap-2.5 items-center mb-4">
-                <p className="flex-1 leading-7 text-foreground">
-                  Add new category
-                </p>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  className="w-9 h-9 rounded-full"
-                  onClick={() => setOpen(false)}
-                >
-                  <IoCloseOutline size={16} />
-                </Button>
-              </DialogTitle>
-              <DialogDescription className="hidden" />
-            </DialogHeader>
-
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="categoryName" className="text-foreground">
-                Category name
-              </Label>
-              <Input
-                id="categoryName"
-                name="categoryName"
-                type="text"
-                placeholder="Type category name..."
-                className="text-sm leading-5 py-2"
-                value={categoryName}
-                onChange={categoryNameChangeHandler}
-              />
-            </div>
-
-            <DialogFooter className="mt-6">
+        <DialogContent className="w-115 gap-6 rounded-xl">
+          <DialogHeader>
+            <DialogTitle className="flex gap-2.5 items-center mb-4">
+              <p className="flex-1 leading-7 text-foreground">
+                Add new category
+              </p>
               <Button
                 type="button"
-                onClick={createCategoryHandler}
-                // onKeyDown={(e) => e.key === "Enter" && createCategoryHandler()}
-                size={"lg"}
-                className="w-fit leading-5 px-4"
+                variant="secondary"
+                className="w-9 h-9 rounded-full"
+                onClick={() => setOpen(false)}
               >
-                Add category
+                <IoCloseOutline size={16} />
               </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </div>
+            </DialogTitle>
+            <DialogDescription className="hidden" />
+          </DialogHeader>
+
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="categoryName" className="text-foreground">
+              Category name
+            </Label>
+            <Input
+              id="categoryName"
+              name="categoryName"
+              type="text"
+              placeholder="Type category name..."
+              className="text-sm leading-5 py-2"
+              value={categoryName}
+              onChange={categoryNameChangeHandler}
+            />
+          </div>
+
+          <DialogFooter className="mt-6">
+            <Button
+              type="button"
+              onClick={createCategoryHandler}
+              // onKeyDown={(e) => e.key === "Enter" && createCategoryHandler()}
+              size={"lg"}
+              className="w-fit leading-5 px-4"
+            >
+              Add category
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
