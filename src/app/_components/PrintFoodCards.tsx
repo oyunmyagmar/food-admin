@@ -24,7 +24,7 @@ export const PrintFoodCards = ({
     <div className="flex flex-wrap gap-4">
       {foods.map((food) => (
         <div
-          key={food.foodName}
+          key={food._id}
           className="w-[270.75px] p-4 border border-border rounded-[20px] flex flex-col gap-5"
         >
           <div className="w-full h-[129px] rounded-xl relative overflow-hidden">

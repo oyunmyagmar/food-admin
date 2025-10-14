@@ -36,7 +36,6 @@ export const CreateFoodDialog = () => {
   const [foodName, setFoodName] = useState<string>("");
   const [price, setPrice] = useState<number>(0);
   const [ingredients, setIngredients] = useState<string>("");
-  const [category, setCategory] = useState<string>("");
   const [image, setImage] = useState<File | undefined | string>();
   const [foods, setFoods] = useState<Food[]>([]);
 
@@ -52,7 +51,7 @@ export const CreateFoodDialog = () => {
   }, []);
 
   const addFoodHandler = async () => {
-    if (!foodName || !price || !ingredients || !category || !image) {
+    if (!foodName || !price || !ingredients || !image) {
       alert("All fields are required!");
       return;
     }
@@ -62,7 +61,6 @@ export const CreateFoodDialog = () => {
     form.append("foodName", foodName);
     form.append("price", String(price));
     form.append("ingredients", ingredients);
-    form.append("category", category);
     form.append("image", image); // File object
 
     await fetch("http://localhost:4000/api/foods", {
@@ -75,7 +73,7 @@ export const CreateFoodDialog = () => {
     setFoodName("");
     setPrice(0);
     setIngredients("");
-    setCategory("");
+    // setCategory("");
     setImage(undefined);
     setIsOpen(false);
   };
@@ -88,9 +86,6 @@ export const CreateFoodDialog = () => {
   };
   const ingredientsChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setIngredients(e.target.value);
-  };
-  const categoryChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setCategory(e.target.value);
   };
   const fileChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -189,21 +184,6 @@ export const CreateFoodDialog = () => {
                 onChange={ingredientsChangeHandler}
               />
             </div>
-
-            {/* <div className="flex flex-col gap-2">
-              <Label htmlFor="category" className="text-foreground">
-                Category
-              </Label>
-              <Input
-                id="category"
-                name="category"
-                type="text"
-                placeholder="Enter category..."
-                className="text-sm leading-5 py-2"
-                value={category}
-                onChange={categoryChangeHandler}
-              />
-            </div> */}
 
             <div className="flex flex-col gap-2">
               <Label htmlFor="image" className="text-foreground">

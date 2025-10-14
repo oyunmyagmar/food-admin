@@ -171,7 +171,7 @@ export const CreateCategoryDialog = () => {
               <Button
                 type="button"
                 onClick={createCategoryHandler}
-                onKeyDown={(e) => e.key === "Enter" && createCategoryHandler()}
+                // onKeyDown={(e) => e.key === "Enter" && createCategoryHandler()}
                 size={"lg"}
                 className="w-fit leading-5 px-4"
               >

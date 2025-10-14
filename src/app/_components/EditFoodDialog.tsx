@@ -50,54 +50,54 @@ export const EditFoodDialog = ({
   getFoods,
 }: {
   foodTitle: string;
-  foodPrice: string | number;
+  foodPrice: number;
   foodIngredients: string;
   foodImage: string;
   foodId: string;
   getFoods: Function;
 }) => {
   const [editIsOpen, setEditIsOpen] = useState(false);
-  const [imagePreview, setImagePreview] = useState<string>("");
-  const [foodName, setFoodName] = useState<string>("");
-  const [price, setPrice] = useState<number>(0);
-  const [ingredients, setIngredients] = useState<string>("");
-  const [category, setCategory] = useState<string>("");
-  const [image, setImage] = useState<File | undefined | string>();
-  const [foods, setFoods] = useState<Food[]>([]);
+  const [imagePreview, setImagePreview] = useState<string>(foodImage);
+  const [foodNameEdited, setFoodNameEdited] = useState<string>(foodTitle);
+  const [categorySelected, setCategorySelected] = useState<string>("");
+  const [ingredientsEdited, setIngredientsEdited] =
+    useState<string>(foodIngredients);
+  const [priceEdited, setPriceEdited] = useState<number>(foodPrice);
+
+  const [foodsEdited, setFoodsEdoted] = useState<Food[]>([]);
 
   const [categories, setCategories] = useState<FoodCategory[]>([]);
-
-  // const getFoods = async () => {
-  //   const res = await fetch("http://localhost:4000/api/foods");
-  //   const resData = await res.json();
-  //   const { data } = resData;
-
-  //   setFoods(data);
-  // };
-  // useEffect(() => {
-  //   getFoods();
-  // }, []);
 
   const getCategories = async () => {
     const res = await fetch("http://localhost:4000/api/categories");
     const resData = await res.json();
     const { data } = resData;
-
     setCategories(data);
   };
-
   useEffect(() => {
     getCategories();
   }, []);
 
-  // const saveChangeHandler = async () => {
-  //   await fetch(`http://localhost:4000/api/foods`, {
-  //     method: "PATCH",
-  //   });
-  // };
+  const saveChangeHandler = async (id: string) => {
+    await fetch(`http://localhost:4000/api/foods${id}`, {
+      method: "PUT",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        foodNameEdited: foodNameEdited,
+        categorySelected: categorySelected,
+        ingredientsEdited: ingredientsEdited,
+        priceEdited: priceEdited,
+      }),
+    });
+
+    await getFoods();
+    alert("Dish is being updated to the menu!");
+  };
 
   const deleteFoodHandler = async (id: string) => {
-    alert(id);
     if (confirm("Are you sure you want to delete this food?")) {
       try {
         const response = await fetch(`http://localhost:4000/api/foods/${id}`, {
@@ -122,23 +122,17 @@ export const EditFoodDialog = ({
     }
   };
   const foodNameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setFoodName(e.target.value);
+    setFoodNameEdited(e.target.value);
   };
-  const priceChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setPrice(Number(e.target.value));
+  const categoryChangeHandler = (value: string) => {
+    console.log("SELECT VALUE", value);
+    setCategorySelected(value);
   };
   const ingredientsChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setIngredients(e.target.value);
+    setIngredientsEdited(e.target.value);
   };
-  const categoryChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setCategory(e.target.value);
-  };
-  const fileChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setImage(e.target.files[0]);
-      const filePreview = URL.createObjectURL(e.target.files[0]);
-      setImagePreview(filePreview);
-    }
+  const priceChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setPriceEdited(Number(e.target.value));
   };
 
   return (
@@ -184,7 +178,7 @@ export const EditFoodDialog = ({
                 type="text"
                 className="text-sm leading-5 py-2"
                 defaultValue={foodTitle}
-                // onChange={foodNameChangeHandler}
+                onChange={foodNameChangeHandler}
               />
             </div>
 
@@ -195,8 +189,7 @@ export const EditFoodDialog = ({
               >
                 Dish category
               </Label>
-
-              {/* <Select>
+              <Select onValueChange={categoryChangeHandler}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
@@ -205,17 +198,13 @@ export const EditFoodDialog = ({
                     <SelectLabel>All Dishes</SelectLabel>
 
                     {categories.map((el) => (
-                      <SelectItem
-                        value={category}
-                        key={el._id}
-                        // onChange={()=>categoryChangeHandler()}
-                      >
+                      <SelectItem value={el._id} key={el._id}>
                         {el.name}
                       </SelectItem>
                     ))}
                   </SelectGroup>
                 </SelectContent>
-              </Select> */}
+              </Select>
             </div>
 
             <div className="flex gap-4 my-3">
@@ -230,8 +219,7 @@ export const EditFoodDialog = ({
                 name="ingredients"
                 className="text-sm leading-5 h-20"
                 defaultValue={foodIngredients}
-                // value={ingredients}
-                // onChange={ingredientsChangeHandler}
+                onChange={ingredientsChangeHandler}
               />
             </div>
 
@@ -248,8 +236,7 @@ export const EditFoodDialog = ({
                 type="number"
                 className="text-sm leading-5 py-2"
                 defaultValue={foodPrice}
-                // value={price}
-                // onChange={priceChangeHandler}
+                onChange={priceChangeHandler}
               />
             </div>
 
@@ -261,20 +248,22 @@ export const EditFoodDialog = ({
                 Image
               </Label>
 
-              {image ? (
-                <div className="w-full h-29 rounded-md relative overflow-hidden">
+              {foodImage ? (
+                <div className="w-72 h-29 rounded-md relative overflow-hidden">
                   <Image
                     src={foodImage}
                     alt="imagePreview"
-                    fill
+                    width={288}
+                    height={116}
                     objectFit="cover"
+                    unoptimized
                   />
                   <Button
                     type="button"
                     variant="outline"
                     className="absolute w-9 h-9 rounded-full right-2 top-2"
                     onClick={() => {
-                      setImage("");
+                      setImagePreview("");
                     }}
                   >
                     <IoCloseOutline size={16} />
@@ -287,7 +276,7 @@ export const EditFoodDialog = ({
                     name="image"
                     type="file"
                     className="absolute inset-0 opacity-0"
-                    // onChange={fileChangeHandler}
+                    // onChange={}
                   />
                   <div className="flex flex-col justify-center items-center gap-2">
                     <div className="w-8 h-8 rounded-full bg-background flex justify-center items-center">
@@ -318,7 +307,7 @@ export const EditFoodDialog = ({
                 type="button"
                 size={"lg"}
                 className="w-fit leading-5 py-2.5 px-4"
-                // onClick={saveChangeHandler}
+                onClick={() => saveChangeHandler(foodId)}
               >
                 Save changes
               </Button>
