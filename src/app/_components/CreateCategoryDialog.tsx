@@ -94,7 +94,7 @@ export const CreateCategoryDialog = () => {
   };
 
   return (
-    <div>
+    <div className="flex gap-3">
       {categories.map((category) => (
         <Button
           key={category._id}
