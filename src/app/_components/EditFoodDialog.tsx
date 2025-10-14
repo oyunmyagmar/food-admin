@@ -24,22 +24,7 @@ import { IoCloseOutline } from "react-icons/io5";
 import Image from "next/image";
 import { LuImage } from "react-icons/lu";
 import { LuTrash } from "react-icons/lu";
-
-interface Food {
-  _id: string;
-  foodName: string;
-  price: number;
-  image: string;
-  ingredients: string;
-  category?: string;
-  createdAt?: Date;
-  updated?: Date;
-}
-
-interface FoodCategory {
-  _id: string;
-  name: string;
-}
+import { CategoryType, FoodType } from "./types";
 
 export const EditFoodDialog = ({
   foodTitle,
@@ -64,9 +49,8 @@ export const EditFoodDialog = ({
     useState<string>(foodIngredients);
   const [priceEdited, setPriceEdited] = useState<number>(foodPrice);
 
-  const [foodsEdited, setFoodsEdoted] = useState<Food[]>([]);
-
-  const [categories, setCategories] = useState<FoodCategory[]>([]);
+  const [foodsEdited, setFoodsEdoted] = useState<FoodType[]>([]);
+  const [categories, setCategories] = useState<CategoryType[]>([]);
 
   const getCategories = async () => {
     const res = await fetch("http://localhost:4000/api/categories");

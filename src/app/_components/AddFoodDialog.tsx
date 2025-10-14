@@ -17,15 +17,25 @@ import Image from "next/image";
 import { LuImage } from "react-icons/lu";
 import { GoPlus } from "react-icons/go";
 import { IoCloseOutline } from "react-icons/io5";
-import { FoodType } from "./types";
 import { PrintFoodCards } from "./PrintFoodCards";
 
+interface Food {
+  _id: string;
+  foodName: string;
+  price: number;
+  image: string;
+  ingredients: string;
+  category?: string;
+  createdAt?: Date;
+  updated?: Date;
+}
+
 export const CreateFoodDialog = ({
-  categoryName,
+  catergoryTitle,
   categoryId,
 }: {
+  catergoryTitle: string;
   categoryId: string;
-  categoryName: string;
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [imagePreview, setImagePreview] = useState<string>("");
@@ -33,7 +43,7 @@ export const CreateFoodDialog = ({
   const [price, setPrice] = useState<number>(0);
   const [ingredients, setIngredients] = useState<string>("");
   const [image, setImage] = useState<File | undefined | string>();
-  const [foods, setFoods] = useState<FoodType[]>([]);
+  const [foods, setFoods] = useState<Food[]>([]);
 
   const getFoods = async () => {
     const res = await fetch("http://localhost:4000/api/foods");
@@ -91,7 +101,11 @@ export const CreateFoodDialog = ({
   };
 
   return (
-    <div className="flex flex-wrap gap-4">
+    <div className="p-5 bg-background rounded-xl flex flex-wrap gap-4">
+      <div className="w-full text-xl leading-7 font-semibold text-foreground">
+        {catergoryTitle} <span className="ml-2">(6)</span>
+      </div>
+
       <Dialog open={isOpen}>
         <DialogTrigger asChild>
           <div
@@ -106,7 +120,7 @@ export const CreateFoodDialog = ({
               <GoPlus size={16} />
             </Button>
             <p className="w-[154px] text-center text-sm leading-5 font-medium text-secondary-foreground">
-              Add new Dish to {categoryName}
+              Add new Dish to "{"Appetizers"}"
             </p>
           </div>
         </DialogTrigger>
@@ -115,7 +129,7 @@ export const CreateFoodDialog = ({
           <DialogHeader className="gap-0">
             <DialogTitle className="flex gap-2.5 items-center mb-4">
               <p className="flex-1 leading-7 text-foreground">
-                Add new Dish to {categoryName}
+                Add new Dish to "{"Appetizers"}"
               </p>
               <Button
                 type="button"
@@ -230,7 +244,12 @@ export const CreateFoodDialog = ({
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      <PrintFoodCards foods={foods} getFoods={getFoods} />
+
+      <PrintFoodCards
+        foods={foods}
+        getFoods={getFoods}
+        categoryId={categoryId}
+      />
     </div>
   );
 };

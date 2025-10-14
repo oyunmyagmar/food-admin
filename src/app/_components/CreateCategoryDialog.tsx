@@ -10,21 +10,18 @@ import {
   DialogTrigger,
   DialogFooter,
   Input,
-  Badge,
   Label,
+  Badge,
 } from "@/components/ui";
 import { GoPlus } from "react-icons/go";
 import { IoCloseOutline } from "react-icons/io5";
-
-interface FoodCategory {
-  _id: string;
-  name: string;
-}
+import { CategoryType } from "./types";
+import { DeleteCategoryDialog } from "./DeleteCategoryDialog";
 
 export const CreateCategoryDialog = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [categoryName, setCategoryName] = useState<string>("");
-  const [categories, setCategories] = useState<FoodCategory[]>([]);
+  const [categories, setCategories] = useState<CategoryType[]>([]);
 
   const getCategories = async () => {
     const res = await fetch("http://localhost:4000/api/categories");
@@ -62,39 +59,12 @@ export const CreateCategoryDialog = () => {
     }
   };
 
-  const deleteCategoryHandler = async (id: string) => {
-    if (confirm("Are you sure you want to delete this category?")) {
-      try {
-        const response = await fetch(
-          `http://localhost:4000/api/categories/${id}`,
-          {
-            method: "DELETE",
-          }
-        );
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error(
-            `Delete failed with status ${response.status}: ${errorText}`
-          );
-          return;
-        }
-
-        const resultText = await response.text();
-        console.log(`Delete successful, ${resultText}`);
-        await getCategories();
-      } catch (error) {
-        console.error("Network or unexpected error:", error);
-      }
-    }
-  };
-
   const categoryNameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setCategoryName(e.target.value);
   };
 
   return (
-    <div className="flex gap-3">
+    <div className="flex flex-wrap gap-3">
       {categories.map((category) => (
         <Button
           key={category._id}
@@ -110,9 +80,11 @@ export const CreateCategoryDialog = () => {
             <Badge className="rounded-full px-2.5">
               <p className="leading-4 font-semibold">{100}</p>
             </Badge>
-            <div onClick={() => deleteCategoryHandler(category._id)}>
-              <IoCloseOutline />
-            </div>
+
+            <DeleteCategoryDialog
+              getCategories={getCategories}
+              categoryId={category._id}
+            />
           </div>
         </Button>
       ))}
@@ -166,7 +138,6 @@ export const CreateCategoryDialog = () => {
             <Button
               type="button"
               onClick={createCategoryHandler}
-              // onKeyDown={(e) => e.key === "Enter" && createCategoryHandler()}
               size={"lg"}
               className="w-fit leading-5 px-4"
             >

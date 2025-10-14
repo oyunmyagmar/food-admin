@@ -1,24 +1,16 @@
 import React from "react";
 import Image from "next/image";
 import { EditFoodDialog } from "./EditFoodDialog";
-
-interface Food {
-  _id: string;
-  foodName: string;
-  price: number;
-  image: string;
-  ingredients: string;
-  category?: string;
-  createdAt?: Date;
-  updated?: Date;
-}
+import { FoodType } from "./types";
 
 export const PrintFoodCards = ({
   foods,
   getFoods,
-}: {
-  foods: Food[];
+}: // categoryId,
+{
+  foods: FoodType[];
   getFoods: Function;
+  // categoryId: string;
 }) => {
   return (
     <div className="flex flex-wrap gap-4">

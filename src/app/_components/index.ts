@@ -3,6 +3,7 @@ export * from "./Header";
 export * from "./AdminLayout";
 export * from "./CreateFoodDialog";
 export * from "./CreateCategoryDialog";
-export * from "./ChangeFoodDialog";
 export * from "./PrintFoodCards";
 export * from "./EditFoodDialog";
+export * from "./DeleteCategoryDialog";
+export * from "./PrintCategoryDialog";
