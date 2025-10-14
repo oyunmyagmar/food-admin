@@ -4,6 +4,7 @@ import {
   AdminLayout,
   CreateFoodDialog,
   CreateCategoryDialog,
+  AddNewFoodDialog,
 } from "@/app/_components";
 import { CategoryType } from "../_components/types";
 
@@ -32,18 +33,22 @@ const ProductsPage = () => {
         </div>
 
         {categories.map((category) => (
-          <div>
-            <div className="p-5 bg-background rounded-xl flex flex-wrap gap-4">
-              <div className="w-full text-xl leading-7 font-semibold text-foreground mr-2">
-                {category.name} <span>(6)</span>
-              </div>
-              <CreateFoodDialog
-                categoryId={category._id}
-                categoryName={category.name}
-              />
+          <div
+            key={category._id}
+            className="p-5 bg-background rounded-xl flex flex-wrap gap-4"
+          >
+            <div className="w-full text-xl leading-7 font-semibold text-foreground mr-2">
+              {category.name} <span>(6)</span>
             </div>
+            <CreateFoodDialog
+              categoryId={category._id}
+              categoryName={category.name}
+            />
           </div>
         ))}
+
+        {/* add card initially foodCategory select-tei */}
+        <AddNewFoodDialog />
       </div>
     </AdminLayout>
   );

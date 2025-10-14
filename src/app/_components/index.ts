@@ -7,3 +7,4 @@ export * from "./PrintFoodCards";
 export * from "./EditFoodDialog";
 export * from "./DeleteCategoryDialog";
 export * from "./PrintCategoryDialog";
+export * from "./AddNewFoodDialog";
