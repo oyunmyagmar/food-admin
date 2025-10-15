@@ -25,7 +25,7 @@ import { LuImage } from "react-icons/lu";
 import { GoPlus } from "react-icons/go";
 import { IoCloseOutline } from "react-icons/io5";
 import { CategoryType, NewFoodType } from "./types";
-import { PrintNewFoodCards } from "./PrintNewFoodCards";
+import { PrintNewFoodCards } from "@/app/_components";
 
 export const AddNewFoodDialog = ({
   categories,
@@ -35,11 +35,11 @@ export const AddNewFoodDialog = ({
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [imagePreview, setImagePreview] = useState<string>("");
 
-  const [name, setName] = useState<string>("");
+  const [foodName, setFoodName] = useState<string>("");
   const [price, setPrice] = useState<number>(0);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null); // yagad null bga?
   const [ingredients, setIngredients] = useState<string>("");
-  const [image, setImage] = useState<File | undefined | string>();
+  const [image, setImage] = useState<File | undefined>(); // yagad undefined
 
   const [foods, setFoods] = useState<NewFoodType[]>([]);
 
@@ -55,14 +55,14 @@ export const AddNewFoodDialog = ({
   }, []);
 
   const addFoodHandler = async () => {
-    if (!name || !price || !ingredients || !image || !selectedCategory) {
+    if (!foodName || !price || !ingredients || !image || !selectedCategory) {
       alert("All fields are required!");
       return;
     }
 
     const newForm = new FormData();
 
-    newForm.append("name", name);
+    newForm.append("foodName", foodName);
     newForm.append("price", String(price));
     newForm.append("selectedCategoryId", selectedCategory);
     newForm.append("ingredients", ingredients);
@@ -75,7 +75,7 @@ export const AddNewFoodDialog = ({
 
     await getNewFoods();
     alert("New dish is being added to the menu!");
-    setName("");
+    setFoodName("");
     setPrice(0);
     setSelectedCategory(null);
     setIngredients("");
@@ -84,13 +84,13 @@ export const AddNewFoodDialog = ({
   };
 
   const foodNameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
+    setFoodName(e.target.value);
   };
   const priceChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setPrice(Number(e.target.value));
   };
   const categoryChangeHandler = (value: string) => {
-    console.log("SELECT VALUE", value);
+    // console.log("SELECT VALUE", value);
     setSelectedCategory(value);
   };
   const ingredientsChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -120,7 +120,7 @@ export const AddNewFoodDialog = ({
               <GoPlus size={16} />
             </Button>
             <p className="w-[154px] text-center text-sm leading-5 font-medium text-secondary-foreground">
-              Add new Dish to {"categoryName"}
+              Add new Dish to {"categoryName such as Pizzas"}
             </p>
           </div>
         </DialogTrigger>
@@ -129,7 +129,7 @@ export const AddNewFoodDialog = ({
           <DialogHeader className="gap-0">
             <DialogTitle className="flex gap-2.5 items-center mb-4">
               <p className="flex-1 leading-7 text-foreground">
-                Add new Dish to {"categoryName"}
+                Add new Dish to {"categoryName such as Pizzas"}
               </p>
               <Button
                 type="button"
@@ -154,10 +154,11 @@ export const AddNewFoodDialog = ({
                 type="text"
                 placeholder="Type food name"
                 className="text-sm leading-5 py-2"
-                value={name}
+                value={foodName}
                 onChange={foodNameChangeHandler}
               />
             </div>
+
             <div className="w-1/2 flex flex-col gap-2">
               <Label htmlFor="price" className="text-foreground">
                 Food price
@@ -175,20 +176,33 @@ export const AddNewFoodDialog = ({
           </div>
 
           <div className="flex flex-col gap-2">
-            <Label htmlFor="ingredients" className="text-foreground">
+            <Label htmlFor="selectedCategory" className="text-foreground">
               Category
             </Label>
-            <Select onValueChange={categoryChangeHandler}>
+            <Select
+              onValueChange={categoryChangeHandler}
+              name="editedCategorySelected"
+            >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select a category" />
+                <SelectValue
+                  placeholder="Select a category"
+                  className="leading-5"
+                />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectLabel>All Dishes</SelectLabel>
+                  <SelectLabel className="text-sm text-primary font-medium py-0.5 my-2">
+                    All Dishes
+                  </SelectLabel>
 
-                  {categories.map((el) => (
-                    <SelectItem value={el._id} key={el._id}>
-                      {el.name}
+                  {categories.map((category) => (
+                    <SelectItem
+                      value={category._id}
+                      key={category._id}
+                      id="selectedCategory"
+                      className="text-primary font-medium py-0.5 my-2 rounded-full"
+                    >
+                      {category.categoryName}
                     </SelectItem>
                   ))}
                 </SelectGroup>
@@ -215,19 +229,21 @@ export const AddNewFoodDialog = ({
               Food image
             </Label>
             {image ? (
-              <div className="w-full h-[138px] rounded-md relative overflow-hidden">
+              <div className="w-103 h-[138px] rounded-md relative overflow-hidden">
                 <Image
                   src={imagePreview}
                   alt="imagePreview"
-                  fill
-                  objectFit="cover"
+                  width={412}
+                  height={138}
+                  className="object-cover w-full h-full"
+                  unoptimized
                 />
                 <Button
                   type="button"
                   variant="outline"
                   className="absolute w-9 h-9 rounded-full right-2 top-2"
                   onClick={() => {
-                    setImage("");
+                    setImage(undefined);
                   }}
                 >
                   <IoCloseOutline size={16} />

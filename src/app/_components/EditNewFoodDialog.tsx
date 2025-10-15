@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState, useEffect } from "react";
+import React, { ChangeEvent, useState } from "react";
 import {
   Button,
   Dialog,
@@ -27,58 +27,70 @@ import { LuTrash } from "react-icons/lu";
 import { CategoryType, NewFoodType } from "./types";
 
 export const EditNewFoodDialog = ({
-  foodTitle,
-  foodPrice,
+  foodName,
+  foodCategory,
   foodIngredients,
+  foodPrice,
   foodImage,
   foodId,
   getNewFoods,
   categories,
 }: {
-  foodTitle: string;
-  foodPrice: number;
+  foodName: string;
+  foodCategory: string;
   foodIngredients: string;
+  foodPrice: number;
   foodImage: string;
   foodId: string;
   getNewFoods: Function;
   categories: CategoryType[];
 }) => {
   const [editIsOpen, setEditIsOpen] = useState(false);
-  const [imagePreview, setImagePreview] = useState<string>(foodImage);
+  const [editedImagePreview, setEditedImagePreview] =
+    useState<string>(foodImage);
 
-  const [editedFoodName, setEditedFoodName] = useState<string>(foodTitle);
-  const [categorySelected, setCategorySelected] = useState<string>("");
+  const [editedFoodName, setEditedFoodName] = useState<string>(foodName);
+  const [editedCategorySelected, setEditedCategorySelected] =
+    useState<string>(foodCategory);
   const [editedIngredients, setEditedIngredients] =
     useState<string>(foodIngredients);
   const [editedPrice, setEditedPrice] = useState<number>(foodPrice);
-  const [editedImage, setEditedImage] = useState<File | string>();
+  const [editedImage, setEditedImage] = useState<File | undefined>();
 
-  const [foods, setFoods] = useState<NewFoodType[]>([]);
+  const [printedFoodId, setPrintedFoodId] = useState<string>(foodId);
+  // const [foods, setFoods] = useState<NewFoodType[]>([]);
 
-  const saveChangeHandler = async (id: string) => {
+  const saveChangeHandler = async () => {
     const editedForm = new FormData();
 
     editedForm.append("editedFoodName", editedFoodName);
-    editedForm.append("categorySelected", categorySelected);
+    editedForm.append("editedCategorySelected", editedCategorySelected);
     editedForm.append("editedIngredients", editedIngredients);
     editedForm.append("editedPrice", String(editedPrice));
-    editedForm.append("editedImage", editedImage);
+    if (editedImage) {
+      editedForm.append("editedImage", editedImage);
+    }
+    editedForm.append("printedFoodId", printedFoodId);
 
-    await fetch(`http://localhost:4000/api/newfoods${id}`, {
+    await fetch(`http://localhost:4000/api/newfoods`, {
       method: "PUT",
       body: editedForm,
     });
 
     await getNewFoods();
     alert("Dish is being updated to the menu!");
+    setEditIsOpen(false);
   };
 
-  const deleteFoodHandler = async (id: string) => {
+  const deleteFoodHandler = async (foodId: string) => {
     if (confirm("Are you sure you want to delete this food?")) {
       try {
-        const response = await fetch(`http://localhost:4000/api/foods/${id}`, {
-          method: "DELETE",
-        });
+        const response = await fetch(
+          `http://localhost:4000/api/newfoods/${foodId}`,
+          {
+            method: "DELETE",
+          }
+        );
 
         if (!response.ok) {
           const errorText = await response.text();
@@ -102,7 +114,7 @@ export const EditNewFoodDialog = ({
   };
   const categoryChangeHandler = (value: string) => {
     console.log("SELECT VALUE", value);
-    setCategorySelected(value);
+    setEditedCategorySelected(value);
   };
   const ingredientsChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setEditedIngredients(e.target.value);
@@ -111,11 +123,11 @@ export const EditNewFoodDialog = ({
     setEditedPrice(Number(e.target.value));
   };
   const fileChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    if (!foodImage) {
+    if (!editedImagePreview) {
       if (e.target.files) {
         setEditedImage(e.target.files[0]);
         const filePreview = URL.createObjectURL(e.target.files[0]);
-        setImagePreview(filePreview);
+        setEditedImagePreview(filePreview);
       }
     }
   };
@@ -152,39 +164,53 @@ export const EditNewFoodDialog = ({
           <div className="w-full">
             <div className="flex gap-4 my-3">
               <Label
-                htmlFor="foodName"
+                htmlFor="editedFoodName"
                 className="w-30 text-xs leading-4 font-normal text-muted-foreground items-start"
               >
                 Dish name
               </Label>
               <Input
-                id="foodName"
-                name="foodName"
+                id="editedFoodName"
+                name="editedFoodName"
                 type="text"
                 className="text-sm leading-5 py-2"
-                defaultValue={foodTitle}
+                defaultValue={foodName}
                 onChange={foodNameChangeHandler}
               />
             </div>
 
             <div className="flex gap-4 my-3">
               <Label
-                htmlFor="category"
+                htmlFor="editedCategorySelected"
                 className="w-30 text-xs leading-4 font-normal text-muted-foreground items-start"
               >
                 Dish category
               </Label>
-              <Select onValueChange={categoryChangeHandler}>
+              <Select
+                onValueChange={categoryChangeHandler}
+                name="editedCategorySelected"
+                defaultValue={editedCategorySelected}
+              >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a category" />
+                  <SelectValue
+                    placeholder="Select a category"
+                    className="leading-5"
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>All Dishes</SelectLabel>
+                    <SelectLabel className="text-primary font-medium py-0.5 my-2">
+                      All Dishes
+                    </SelectLabel>
 
-                    {categories.map((el) => (
-                      <SelectItem value={el._id} key={el._id}>
-                        {el.name}
+                    {categories.map((category) => (
+                      <SelectItem
+                        value={category._id}
+                        key={category._id}
+                        id="editedCategorySelected"
+                        className="text-xs text-primary font-medium py-0.5 my-2 rounded-full"
+                      >
+                        {category.categoryName}
                       </SelectItem>
                     ))}
                   </SelectGroup>
@@ -232,16 +258,14 @@ export const EditNewFoodDialog = ({
               >
                 Image
               </Label>
-
-              {foodImage ? (
+              {editedImagePreview ? (
                 <div className="w-full h-29 rounded-md relative overflow-hidden">
                   <Image
-                    src={foodImage}
+                    src={editedImagePreview}
                     alt="imagePreview"
                     width={288}
                     height={116}
-                    className="w-full"
-                    objectFit="cover"
+                    className="object-cover w-full h-full"
                     unoptimized
                   />
                   <Button
@@ -249,7 +273,8 @@ export const EditNewFoodDialog = ({
                     variant="outline"
                     className="absolute w-9 h-9 rounded-full right-2 top-2"
                     onClick={() => {
-                      setImagePreview("");
+                      setEditedImage(undefined);
+                      setEditedImagePreview("");
                     }}
                   >
                     <IoCloseOutline size={16} />
@@ -262,7 +287,7 @@ export const EditNewFoodDialog = ({
                     name="image"
                     type="file"
                     className="absolute inset-0 opacity-0"
-                    // onChange={}
+                    onChange={fileChangeHandler}
                   />
                   <div className="flex flex-col justify-center items-center gap-2">
                     <div className="w-8 h-8 rounded-full bg-background flex justify-center items-center">
@@ -293,7 +318,7 @@ export const EditNewFoodDialog = ({
                 type="button"
                 size={"lg"}
                 className="w-fit leading-5 py-2.5 px-4"
-                onClick={() => saveChangeHandler(foodId)}
+                onClick={saveChangeHandler}
               >
                 Save changes
               </Button>

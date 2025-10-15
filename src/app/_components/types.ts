@@ -1,11 +1,11 @@
 export type CategoryType = {
   _id: string;
-  name: string;
+  categoryName: string;
 };
 
 export interface FoodType {
   _id: string;
-  foodName: string;
+  name: string;
   price: number;
   image: string;
   ingredients: string;
@@ -16,9 +16,9 @@ export interface FoodType {
 
 export type NewFoodType = {
   _id: string;
-  name: string;
+  foodName: string;
   price: number;
-  image: string;
+  category: string;
   ingredients: string;
-  category?: string;
+  image: string;
 };

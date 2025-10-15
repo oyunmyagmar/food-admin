@@ -47,7 +47,7 @@ export const CreateCategoryDialog = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name: categoryName }),
+        body: JSON.stringify({ categoryName: categoryName }),
       });
 
       await getCategories();
@@ -74,7 +74,7 @@ export const CreateCategoryDialog = () => {
         >
           <div className="flex gap-2 items-center">
             <p className="leading-5 text-secondary-foreground">
-              {category.name}
+              {category.categoryName}
             </p>
 
             <Badge className="rounded-full px-2.5">

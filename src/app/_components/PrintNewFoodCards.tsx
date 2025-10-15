@@ -26,15 +26,16 @@ export const PrintNewFoodCards = ({
                 alt="imagePreview"
                 width={270.75}
                 height={129}
-                objectFit="cover"
+                className="object-cover w-full h-full"
                 unoptimized
               />
             ) : (
               ""
             )}
             <EditNewFoodDialog
-              foodTitle={food.name}
+              foodName={food.foodName}
               foodPrice={food.price}
+              foodCategory={food.category}
               foodIngredients={food.ingredients}
               foodImage={food.image}
               foodId={food._id}
@@ -46,7 +47,7 @@ export const PrintNewFoodCards = ({
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2.5">
               <div className="text-sm leading-5 font-medium text-red-500 flex-1 items-center">
-                {food.name}
+                {food.foodName}
               </div>
               <div className="text-xs leading-4 text-foreground">
                 ${food.price}

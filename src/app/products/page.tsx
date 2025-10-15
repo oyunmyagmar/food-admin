@@ -62,7 +62,7 @@ const ProductsPage = () => {
         ))} */}
 
         {/* add card initially foodCategory select-tei */}
-        <div className="p-5 bg-red-100 rounded-xl flex flex-wrap gap-4">
+        <div className="p-5 bg-red-50 rounded-xl flex flex-wrap gap-4">
           <AddNewFoodDialog categories={categories} />
 
           {/* {foods.map((food) => (
