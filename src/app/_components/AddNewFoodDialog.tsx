@@ -12,66 +12,86 @@ import {
   Input,
   Textarea,
   Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  SelectGroup,
+  SelectLabel,
 } from "@/components/ui";
 import Image from "next/image";
 import { LuImage } from "react-icons/lu";
 import { GoPlus } from "react-icons/go";
 import { IoCloseOutline } from "react-icons/io5";
-import { FoodType } from "./types";
-import { PrintFoodCards } from "./PrintFoodCards";
+import { CategoryType, NewFoodType } from "./types";
+import { PrintNewFoodCards } from "./PrintNewFoodCards";
 
-export const AddNewFoodDialog = () => {
+export const AddNewFoodDialog = ({
+  categories,
+}: {
+  categories: CategoryType[];
+}) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [imagePreview, setImagePreview] = useState<string>("");
-  const [foodName, setFoodName] = useState<string>("");
+
+  const [name, setName] = useState<string>("");
   const [price, setPrice] = useState<number>(0);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [ingredients, setIngredients] = useState<string>("");
   const [image, setImage] = useState<File | undefined | string>();
-  const [foods, setFoods] = useState<FoodType[]>([]);
 
-  const getFoods = async () => {
-    const res = await fetch("http://localhost:4000/api/foods");
+  const [foods, setFoods] = useState<NewFoodType[]>([]);
+
+  const getNewFoods = async () => {
+    const res = await fetch("http://localhost:4000/api/newfoods");
     const resData = await res.json();
     const { data } = resData;
 
     setFoods(data);
   };
   useEffect(() => {
-    getFoods();
+    getNewFoods();
   }, []);
 
   const addFoodHandler = async () => {
-    if (!foodName || !price || !ingredients || !image) {
+    if (!name || !price || !ingredients || !image || !selectedCategory) {
       alert("All fields are required!");
       return;
     }
 
-    const form = new FormData();
+    const newForm = new FormData();
 
-    form.append("foodName", foodName);
-    form.append("price", String(price));
-    form.append("ingredients", ingredients);
-    form.append("image", image); // File object
+    newForm.append("name", name);
+    newForm.append("price", String(price));
+    newForm.append("selectedCategoryId", selectedCategory);
+    newForm.append("ingredients", ingredients);
+    newForm.append("image", image); // File object
 
-    await fetch("http://localhost:4000/api/foods", {
+    await fetch("http://localhost:4000/api/newfoods", {
       method: "POST",
-      body: form,
+      body: newForm,
     });
 
-    await getFoods();
+    await getNewFoods();
     alert("New dish is being added to the menu!");
-    setFoodName("");
+    setName("");
     setPrice(0);
+    setSelectedCategory(null);
     setIngredients("");
     setImage(undefined);
     setIsOpen(false);
   };
 
   const foodNameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setFoodName(e.target.value);
+    setName(e.target.value);
   };
   const priceChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setPrice(Number(e.target.value));
+  };
+  const categoryChangeHandler = (value: string) => {
+    console.log("SELECT VALUE", value);
+    setSelectedCategory(value);
   };
   const ingredientsChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setIngredients(e.target.value);
@@ -85,7 +105,7 @@ export const AddNewFoodDialog = () => {
   };
 
   return (
-    <div className="flex flex-wrap gap-4 bg-amber-500">
+    <div>
       <Dialog open={isOpen}>
         <DialogTrigger asChild>
           <div
@@ -134,7 +154,7 @@ export const AddNewFoodDialog = () => {
                 type="text"
                 placeholder="Type food name"
                 className="text-sm leading-5 py-2"
-                value={foodName}
+                value={name}
                 onChange={foodNameChangeHandler}
               />
             </div>
@@ -152,6 +172,28 @@ export const AddNewFoodDialog = () => {
                 onChange={priceChangeHandler}
               />
             </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="ingredients" className="text-foreground">
+              Category
+            </Label>
+            <Select onValueChange={categoryChangeHandler}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>All Dishes</SelectLabel>
+
+                  {categories.map((el) => (
+                    <SelectItem value={el._id} key={el._id}>
+                      {el.name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="flex flex-col gap-2">
@@ -224,7 +266,11 @@ export const AddNewFoodDialog = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      <PrintFoodCards foods={foods} getFoods={getFoods} />
+      <PrintNewFoodCards
+        foods={foods}
+        getNewFoods={getNewFoods}
+        categories={categories}
+      />
     </div>
   );
 };

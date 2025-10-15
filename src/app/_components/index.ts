@@ -8,3 +8,5 @@ export * from "./EditFoodDialog";
 export * from "./DeleteCategoryDialog";
 export * from "./PrintCategoryDialog";
 export * from "./AddNewFoodDialog";
+export * from "./EditNewFoodDialog";
+export * from "./PrintNewFoodCards";

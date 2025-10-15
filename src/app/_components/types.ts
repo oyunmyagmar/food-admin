@@ -13,3 +13,12 @@ export interface FoodType {
   createdAt?: Date;
   updated?: Date;
 }
+
+export type NewFoodType = {
+  _id: string;
+  name: string;
+  price: number;
+  image: string;
+  ingredients: string;
+  category?: string;
+};

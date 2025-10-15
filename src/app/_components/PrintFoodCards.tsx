@@ -6,57 +6,58 @@ import { FoodType } from "./types";
 export const PrintFoodCards = ({
   foods,
   getFoods,
+  foodId,
+  foodName,
+  foodImage,
+  foodPrice,
+  foodIngredients,
 }: // categoryId,
 {
   foods: FoodType[];
   getFoods: Function;
+  foodId: string;
+  foodName: string;
+  foodImage: string;
+  foodPrice: number;
+  foodIngredients: string;
   // categoryId: string;
 }) => {
   return (
-    <div className="flex flex-wrap gap-4">
-      {foods.map((food) => (
-        <div
-          key={food._id}
-          className="w-[270.75px] p-4 border border-border rounded-[20px] flex flex-col gap-5"
-        >
-          <div className="w-full h-[129px] rounded-xl relative overflow-hidden">
-            {food.image ? (
-              <Image
-                src={food.image}
-                alt="imagePreview"
-                width={270.75}
-                height={129}
-                objectFit="cover"
-                unoptimized
-              />
-            ) : (
-              ""
-            )}
-            <EditFoodDialog
-              foodTitle={food.foodName}
-              foodPrice={food.price}
-              foodIngredients={food.ingredients}
-              foodImage={food.image}
-              foodId={food._id}
-              getFoods={getFoods}
-            ></EditFoodDialog>
-          </div>
+    <div className="w-[270.75px] p-4 border border-border rounded-[20px] flex flex-col gap-5">
+      <div className="w-full h-[129px] rounded-xl relative overflow-hidden">
+        {foodImage ? (
+          <Image
+            src={foodImage}
+            alt="imagePreview"
+            width={270.75}
+            height={129}
+            objectFit="cover"
+            unoptimized
+          />
+        ) : (
+          ""
+        )}
+        <EditFoodDialog
+          foodTitle={foodName}
+          foodPrice={foodPrice}
+          foodIngredients={foodIngredients}
+          foodImage={foodImage}
+          foodId={foodId}
+          getFoods={getFoods}
+        ></EditFoodDialog>
+      </div>
 
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2.5">
-              <div className="text-sm leading-5 font-medium text-red-500 flex-1 items-center">
-                {food.foodName}
-              </div>
-              <div className="text-xs leading-4 text-foreground">
-                ${food.price}
-              </div>
-            </div>
-            <div className="text-xs leading-4 text-foreground">
-              {food.ingredients}
-            </div>
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center gap-2.5">
+          <div className="text-sm leading-5 font-medium text-red-500 flex-1 items-center">
+            {foodName}
           </div>
+          <div className="text-xs leading-4 text-foreground">${foodPrice}</div>
         </div>
-      ))}
+        <div className="text-xs leading-4 text-foreground">
+          {foodIngredients}
+        </div>
+      </div>
     </div>
   );
 };

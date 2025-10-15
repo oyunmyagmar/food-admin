@@ -230,7 +230,21 @@ export const CreateFoodDialog = ({
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      <PrintFoodCards foods={foods} getFoods={getFoods} />
+
+      <div>
+        {foods.map((food) => (
+          <PrintFoodCards
+            key={food._id}
+            foods={foods}
+            getFoods={getFoods}
+            foodId={food._id}
+            foodName={food.foodName}
+            foodImage={food.image}
+            foodPrice={food.price}
+            foodIngredients={food.ingredients}
+          />
+        ))}
+      </div>
     </div>
   );
 };

@@ -26,13 +26,14 @@ import { LuImage } from "react-icons/lu";
 import { LuTrash } from "react-icons/lu";
 import { CategoryType, FoodType } from "./types";
 
-export const EditFoodDialog = ({
+export const EditNewFoodDialog = ({
   foodTitle,
   foodPrice,
   foodIngredients,
   foodImage,
   foodId,
   getNewFoods,
+  categories,
 }: {
   foodTitle: string;
   foodPrice: number;
@@ -40,6 +41,7 @@ export const EditFoodDialog = ({
   foodImage: string;
   foodId: string;
   getNewFoods: Function;
+  categories: CategoryType[];
 }) => {
   const [editIsOpen, setEditIsOpen] = useState(false);
   const [imagePreview, setImagePreview] = useState<string>(foodImage);
@@ -50,22 +52,11 @@ export const EditFoodDialog = ({
   const [priceEdited, setPriceEdited] = useState<number>(foodPrice);
 
   const [foodsEdited, setFoodsEdoted] = useState<FoodType[]>([]);
-  const [categories, setCategories] = useState<CategoryType[]>([]);
-
-  const getCategories = async () => {
-    const res = await fetch("http://localhost:4000/api/categories");
-    const resData = await res.json();
-    const { data } = resData;
-    setCategories(data);
-  };
-  useEffect(() => {
-    getCategories();
-  }, []);
 
   const saveChangeHandler = async (id: string) => {
     await fetch(`http://localhost:4000/api/foods${id}`, {
       method: "PUT",
-      mode: "cors",
+      // mode: "cors",
       headers: {
         "Content-Type": "application/json",
       },
@@ -109,7 +100,7 @@ export const EditFoodDialog = ({
     setFoodNameEdited(e.target.value);
   };
   const categoryChangeHandler = (value: string) => {
-    // console.log("SELECT VALUE", value);
+    console.log("SELECT VALUE", value);
     setCategorySelected(value);
   };
   const ingredientsChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
