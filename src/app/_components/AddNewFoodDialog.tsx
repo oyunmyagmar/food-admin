@@ -266,6 +266,7 @@ export const AddNewFoodDialog = ({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
       <PrintNewFoodCards
         foods={foods}
         getNewFoods={getNewFoods}

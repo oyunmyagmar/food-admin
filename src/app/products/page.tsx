@@ -46,7 +46,7 @@ const ProductsPage = () => {
           <CreateCategoryDialog />
         </div>
 
-        {categories.map((category) => (
+        {/* {categories.map((category) => (
           <div
             key={category._id}
             className="p-5 bg-background rounded-xl flex flex-wrap gap-4"
@@ -59,7 +59,7 @@ const ProductsPage = () => {
               categoryName={category.name}
             />
           </div>
-        ))}
+        ))} */}
 
         {/* add card initially foodCategory select-tei */}
         <div className="p-5 bg-red-100 rounded-xl flex flex-wrap gap-4">

@@ -24,7 +24,7 @@ import { IoCloseOutline } from "react-icons/io5";
 import Image from "next/image";
 import { LuImage } from "react-icons/lu";
 import { LuTrash } from "react-icons/lu";
-import { CategoryType, FoodType } from "./types";
+import { CategoryType, NewFoodType } from "./types";
 
 export const EditNewFoodDialog = ({
   foodTitle,
@@ -45,27 +45,28 @@ export const EditNewFoodDialog = ({
 }) => {
   const [editIsOpen, setEditIsOpen] = useState(false);
   const [imagePreview, setImagePreview] = useState<string>(foodImage);
-  const [foodNameEdited, setFoodNameEdited] = useState<string>(foodTitle);
-  const [categorySelected, setCategorySelected] = useState<string>("");
-  const [ingredientsEdited, setIngredientsEdited] =
-    useState<string>(foodIngredients);
-  const [priceEdited, setPriceEdited] = useState<number>(foodPrice);
 
-  const [foodsEdited, setFoodsEdoted] = useState<FoodType[]>([]);
+  const [editedFoodName, setEditedFoodName] = useState<string>(foodTitle);
+  const [categorySelected, setCategorySelected] = useState<string>("");
+  const [editedIngredients, setEditedIngredients] =
+    useState<string>(foodIngredients);
+  const [editedPrice, setEditedPrice] = useState<number>(foodPrice);
+  const [editedImage, setEditedImage] = useState<File | string>();
+
+  const [foods, setFoods] = useState<NewFoodType[]>([]);
 
   const saveChangeHandler = async (id: string) => {
-    await fetch(`http://localhost:4000/api/foods${id}`, {
+    const editedForm = new FormData();
+
+    editedForm.append("editedFoodName", editedFoodName);
+    editedForm.append("categorySelected", categorySelected);
+    editedForm.append("editedIngredients", editedIngredients);
+    editedForm.append("editedPrice", String(editedPrice));
+    editedForm.append("editedImage", editedImage);
+
+    await fetch(`http://localhost:4000/api/newfoods${id}`, {
       method: "PUT",
-      // mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        foodNameEdited: foodNameEdited,
-        categorySelected: categorySelected,
-        ingredientsEdited: ingredientsEdited,
-        priceEdited: priceEdited,
-      }),
+      body: editedForm,
     });
 
     await getNewFoods();
@@ -97,17 +98,26 @@ export const EditNewFoodDialog = ({
     }
   };
   const foodNameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setFoodNameEdited(e.target.value);
+    setEditedFoodName(e.target.value);
   };
   const categoryChangeHandler = (value: string) => {
     console.log("SELECT VALUE", value);
     setCategorySelected(value);
   };
   const ingredientsChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setIngredientsEdited(e.target.value);
+    setEditedIngredients(e.target.value);
   };
   const priceChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setPriceEdited(Number(e.target.value));
+    setEditedPrice(Number(e.target.value));
+  };
+  const fileChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!foodImage) {
+      if (e.target.files) {
+        setEditedImage(e.target.files[0]);
+        const filePreview = URL.createObjectURL(e.target.files[0]);
+        setImagePreview(filePreview);
+      }
+    }
   };
 
   return (
@@ -139,11 +149,11 @@ export const EditNewFoodDialog = ({
             <DialogDescription className="hidden" />
           </DialogHeader>
 
-          <div>
+          <div className="w-full">
             <div className="flex gap-4 my-3">
               <Label
                 htmlFor="foodName"
-                className="w-30 text-xs leading-4 font-normal text-muted-foreground flex items-start"
+                className="w-30 text-xs leading-4 font-normal text-muted-foreground items-start"
               >
                 Dish name
               </Label>
@@ -160,7 +170,7 @@ export const EditNewFoodDialog = ({
             <div className="flex gap-4 my-3">
               <Label
                 htmlFor="category"
-                className="w-30 text-xs leading-4 font-normal text-muted-foreground flex items-start"
+                className="w-30 text-xs leading-4 font-normal text-muted-foreground items-start"
               >
                 Dish category
               </Label>
@@ -185,7 +195,7 @@ export const EditNewFoodDialog = ({
             <div className="flex gap-4 my-3">
               <Label
                 htmlFor="ingredients"
-                className="w-30 text-xs leading-4 font-normal text-muted-foreground flex items-start"
+                className="w-30 text-xs leading-4 font-normal text-muted-foreground items-start"
               >
                 Ingredients
               </Label>
@@ -201,7 +211,7 @@ export const EditNewFoodDialog = ({
             <div className="flex gap-4 my-3">
               <Label
                 htmlFor="price"
-                className="w-30 text-xs leading-4 font-normal text-muted-foreground flex items-start"
+                className="w-30 text-xs leading-4 font-normal text-muted-foreground items-start"
               >
                 Price
               </Label>
@@ -218,18 +228,19 @@ export const EditNewFoodDialog = ({
             <div className="flex gap-4 my-3">
               <Label
                 htmlFor="image"
-                className="w-30 text-xs leading-4 font-normal text-muted-foreground flex items-start"
+                className="w-30 text-xs leading-4 font-normal text-muted-foreground items-start"
               >
                 Image
               </Label>
 
               {foodImage ? (
-                <div className="w-72 h-29 rounded-md relative overflow-hidden">
+                <div className="w-full h-29 rounded-md relative overflow-hidden">
                   <Image
                     src={foodImage}
                     alt="imagePreview"
                     width={288}
                     height={116}
+                    className="w-full"
                     objectFit="cover"
                     unoptimized
                   />
