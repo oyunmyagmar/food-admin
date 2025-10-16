@@ -17,22 +17,15 @@ import { IoCloseOutline, IoAddOutline } from "react-icons/io5";
 import { DeleteCategoryDialog } from "@/app/_components";
 import { CategoryType } from "@/lib/types";
 
-export const CreateCategoryDialog = () => {
+export const CreateCategoryDialog = ({
+  refetchGetCategories,
+  categories,
+}: {
+  refetchGetCategories: () => Promise<void>;
+  categories: CategoryType[];
+}) => {
   const [open, setOpen] = useState<boolean>(false);
   const [categoryName, setCategoryName] = useState<string>("");
-  const [categories, setCategories] = useState<CategoryType[]>([]);
-
-  const getCategories = async () => {
-    const res = await fetch("http://localhost:4000/api/categories");
-    const resData = await res.json();
-    const { data } = resData;
-
-    setCategories(data);
-  };
-
-  useEffect(() => {
-    getCategories();
-  }, []);
 
   const createCategoryHandler = async () => {
     if (!categoryName) {
@@ -49,7 +42,7 @@ export const CreateCategoryDialog = () => {
         body: JSON.stringify({ categoryName: categoryName }),
       });
 
-      await getCategories();
+      await refetchGetCategories();
       alert("New Category is being added to the menu!");
       setCategoryName("");
       setOpen(false);
@@ -81,7 +74,7 @@ export const CreateCategoryDialog = () => {
             </Badge>
 
             <DeleteCategoryDialog
-              getCategories={getCategories}
+              refetchGetCategories={refetchGetCategories}
               categoryId={category._id}
             />
           </div>

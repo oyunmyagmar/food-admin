@@ -2,10 +2,10 @@ import React from "react";
 import { IoCloseOutline } from "react-icons/io5";
 
 export const DeleteCategoryDialog = ({
-  getCategories,
+  refetchGetCategories,
   categoryId,
 }: {
-  getCategories: () => Promise<void>;
+  refetchGetCategories: () => Promise<void>;
   categoryId: string;
 }) => {
   const deleteCategoryHandler = async (id: string) => {
@@ -28,7 +28,7 @@ export const DeleteCategoryDialog = ({
 
         const resultText = await response.text();
         console.log(`Delete successful, ${resultText}`);
-        await getCategories();
+        await refetchGetCategories();
       } catch (error) {
         console.error("Network or unexpected error:", error);
       }

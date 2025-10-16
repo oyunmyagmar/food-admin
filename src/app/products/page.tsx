@@ -40,7 +40,10 @@ const ProductsPage = () => {
           <p className="text-xl leading-7 font-semibold text-foreground w-full mb-4">
             Dishes category
           </p>
-          <CreateCategoryDialog />
+          <CreateCategoryDialog
+            refetchGetCategories={() => getCategories()}
+            categories={categories}
+          />
         </div>
 
         {/* {categories.map((category) => (

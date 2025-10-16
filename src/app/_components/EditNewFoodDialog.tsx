@@ -42,7 +42,7 @@ export const EditNewFoodDialog = ({
 
   const [editedFoodName, setEditedFoodName] = useState<string>(food.foodName);
   const [editedCategorySelected, setEditedCategorySelected] = useState<string>(
-    category.categoryName
+    category._id
   );
   const [editedIngredients, setEditedIngredients] = useState<string>(
     food.ingredients
@@ -59,9 +59,9 @@ export const EditNewFoodDialog = ({
     editedForm.append("editedCategorySelected", editedCategorySelected);
     editedForm.append("editedIngredients", editedIngredients);
     editedForm.append("editedPrice", String(editedPrice));
-    if (editedImage) {
+    if (editedImagePreview !== food.image && editedImage) {
       editedForm.append("editedImage", editedImage);
-    }
+    } else editedForm.append("editedImage", food.image);
     editedForm.append("selectedFoodId", food._id);
 
     await fetch(`http://localhost:4000/api/newfoods`, {
@@ -126,7 +126,7 @@ export const EditNewFoodDialog = ({
 
   return (
     <div>
-      <Dialog open={editIsOpen}>
+      <Dialog open={editIsOpen} onOpenChange={setEditIsOpen}>
         <DialogTrigger asChild>
           <Button
             type="button"
