@@ -5,7 +5,7 @@ export const DeleteCategoryDialog = ({
   getCategories,
   categoryId,
 }: {
-  getCategories: Function;
+  getCategories: () => Promise<void>;
   categoryId: string;
 }) => {
   const deleteCategoryHandler = async (id: string) => {
