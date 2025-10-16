@@ -1,4 +1,5 @@
 import React, { ChangeEvent, useState } from "react";
+import Image from "next/image";
 import {
   Button,
   Dialog,
@@ -19,46 +20,37 @@ import {
   SelectGroup,
   SelectLabel,
 } from "@/components/ui";
-import { LuPen } from "react-icons/lu";
 import { IoCloseOutline } from "react-icons/io5";
-import Image from "next/image";
-import { LuImage } from "react-icons/lu";
-import { LuTrash } from "react-icons/lu";
-import { CategoryType } from "@/lib/types";
+import { LuImage, LuTrash, LuPen } from "react-icons/lu";
+import { CategoryType, NewFoodType } from "@/lib/types";
 
 export const EditNewFoodDialog = ({
-  foodName,
-  foodCategory,
-  foodIngredients,
-  foodPrice,
-  foodImage,
-  foodId,
-  getNewFoods,
+  food,
+  refetchGetNewFoods,
   categories,
+  category,
 }: {
-  foodName: string;
-  foodCategory: string;
-  foodIngredients: string;
-  foodPrice: number;
-  foodImage: string;
-  foodId: string;
-  getNewFoods: Function;
+  food: NewFoodType;
+  refetchGetNewFoods: () => Promise<void>;
   categories: CategoryType[];
+  category: CategoryType;
 }) => {
   const [editIsOpen, setEditIsOpen] = useState(false);
-  const [editedImagePreview, setEditedImagePreview] =
-    useState<string>(foodImage);
+  const [editedImagePreview, setEditedImagePreview] = useState<string>(
+    food.image
+  );
 
-  const [editedFoodName, setEditedFoodName] = useState<string>(foodName);
-  const [editedCategorySelected, setEditedCategorySelected] =
-    useState<string>(foodCategory);
-  const [editedIngredients, setEditedIngredients] =
-    useState<string>(foodIngredients);
-  const [editedPrice, setEditedPrice] = useState<number>(foodPrice);
+  const [editedFoodName, setEditedFoodName] = useState<string>(food.foodName);
+  const [editedCategorySelected, setEditedCategorySelected] = useState<string>(
+    category.categoryName
+  );
+  const [editedIngredients, setEditedIngredients] = useState<string>(
+    food.ingredients
+  );
+  const [editedPrice, setEditedPrice] = useState<number>(food.price);
   const [editedImage, setEditedImage] = useState<File | undefined>();
 
-  const [printedFoodId, setPrintedFoodId] = useState<string>(foodId);
-  // const [foods, setFoods] = useState<NewFoodType[]>([]);
+  // const [printedFoodId, setPrintedFoodId] = useState<string>(food._id);
 
   const saveChangeHandler = async () => {
     const editedForm = new FormData();
@@ -70,14 +62,14 @@ export const EditNewFoodDialog = ({
     if (editedImage) {
       editedForm.append("editedImage", editedImage);
     }
-    editedForm.append("printedFoodId", printedFoodId);
+    editedForm.append("selectedFoodId", food._id);
 
     await fetch(`http://localhost:4000/api/newfoods`, {
       method: "PUT",
       body: editedForm,
     });
 
-    await getNewFoods();
+    await refetchGetNewFoods();
     alert("Dish is being updated to the menu!");
     setEditIsOpen(false);
   };
@@ -102,7 +94,7 @@ export const EditNewFoodDialog = ({
 
         const resultText = await response.text();
         console.log(`Delete successful, ${resultText}`);
-        await getNewFoods();
+        await refetchGetNewFoods();
         setEditIsOpen(false);
       } catch (error) {
         console.error("Network or unexpected error:", error);
@@ -174,7 +166,7 @@ export const EditNewFoodDialog = ({
                 name="editedFoodName"
                 type="text"
                 className="text-sm leading-5 py-2"
-                defaultValue={foodName}
+                defaultValue={food.foodName}
                 onChange={foodNameChangeHandler}
               />
             </div>
@@ -229,7 +221,7 @@ export const EditNewFoodDialog = ({
                 id="ingredients"
                 name="ingredients"
                 className="text-sm leading-5 h-20"
-                defaultValue={foodIngredients}
+                defaultValue={food.ingredients}
                 onChange={ingredientsChangeHandler}
               />
             </div>
@@ -246,7 +238,7 @@ export const EditNewFoodDialog = ({
                 name="price"
                 type="number"
                 className="text-sm leading-5 py-2"
-                defaultValue={foodPrice}
+                defaultValue={food.price}
                 onChange={priceChangeHandler}
               />
             </div>
@@ -309,7 +301,7 @@ export const EditNewFoodDialog = ({
                 size={"lg"}
                 variant="outline"
                 className="border-destructive"
-                onClick={() => deleteFoodHandler(foodId)}
+                onClick={() => deleteFoodHandler(food._id)}
               >
                 <LuTrash size={16} className="text-destructive" />
               </Button>

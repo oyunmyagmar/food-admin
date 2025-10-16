@@ -13,9 +13,8 @@ import {
   Label,
   Badge,
 } from "@/components/ui";
-import { GoPlus } from "react-icons/go";
-import { IoCloseOutline } from "react-icons/io5";
-import { DeleteCategoryDialog } from "./DeleteCategoryDialog";
+import { IoCloseOutline, IoAddOutline } from "react-icons/io5";
+import { DeleteCategoryDialog } from "@/app/_components";
 import { CategoryType } from "@/lib/types";
 
 export const CreateCategoryDialog = () => {
@@ -89,7 +88,7 @@ export const CreateCategoryDialog = () => {
         </Button>
       ))}
 
-      <Dialog open={open}>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button
             type="button"
@@ -97,7 +96,7 @@ export const CreateCategoryDialog = () => {
             className="cursor-pointer w-9 h-9 rounded-full bg-red-500"
             onClick={() => setOpen(true)}
           >
-            <GoPlus size={16} />
+            <IoAddOutline size={16} />
           </Button>
         </DialogTrigger>
 

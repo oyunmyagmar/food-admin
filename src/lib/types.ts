@@ -3,6 +3,25 @@ export type CategoryType = {
   categoryName: string;
 };
 
+export type NewFoodType = {
+  _id: string;
+  foodName: string;
+  price: number;
+  categoryId: CategoryType;
+  ingredients: string;
+  image: string;
+};
+
+// before filter
+export type NewFoodTypeBeforeEdit = {
+  _id: string;
+  foodName: string;
+  price: number;
+  category: string;
+  ingredients: string;
+  image: string;
+};
+// hereglegdehgui
 export interface FoodType {
   _id: string;
   name: string;
@@ -13,12 +32,3 @@ export interface FoodType {
   createdAt?: Date;
   updated?: Date;
 }
-
-export type NewFoodType = {
-  _id: string;
-  foodName: string;
-  price: number;
-  category: string;
-  ingredients: string;
-  image: string;
-};
