@@ -18,22 +18,22 @@ import { IoCloseOutline } from "react-icons/io5";
 import { CategoryType } from "./types";
 import { DeleteCategoryDialog } from "./DeleteCategoryDialog";
 
-export const CreateCategoryDialog = () => {
+export const CreateCategoryDialog = ({ fetchGetCategories }) => {
   const [open, setOpen] = useState<boolean>(false);
   const [categoryName, setCategoryName] = useState<string>("");
   const [categories, setCategories] = useState<CategoryType[]>([]);
 
-  const getCategories = async () => {
-    const res = await fetch("http://localhost:4000/api/categories");
-    const resData = await res.json();
-    const { data } = resData;
+  // const getCategories = async () => {
+  //   const res = await fetch("http://localhost:4000/api/categories");
+  //   const resData = await res.json();
+  //   const { data } = resData;
 
-    setCategories(data);
-  };
+  //   setCategories(data);
+  // };
 
-  useEffect(() => {
-    getCategories();
-  }, []);
+  // useEffect(() => {
+  //   getCategories();
+  // }, []);
 
   const createCategoryHandler = async () => {
     if (!categoryName) {
@@ -59,6 +59,7 @@ export const CreateCategoryDialog = () => {
     }
   };
 
+  // const foodFilterHandler(){};
   const categoryNameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setCategoryName(e.target.value);
   };
@@ -71,6 +72,7 @@ export const CreateCategoryDialog = () => {
           type="button"
           variant={"outline"}
           className="rounded-full px-4 py-2"
+          // onClick={foodFilterHandler}
         >
           <div className="flex gap-2 items-center">
             <p className="leading-5 text-secondary-foreground">

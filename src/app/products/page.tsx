@@ -21,9 +21,6 @@ const ProductsPage = () => {
 
     setCategories(data);
   };
-  useEffect(() => {
-    getCategories();
-  }, []);
 
   const getNewFoods = async () => {
     const res = await fetch("http://localhost:4000/api/newfoods");
@@ -33,6 +30,7 @@ const ProductsPage = () => {
     setFoods(data);
   };
   useEffect(() => {
+    getCategories();
     getNewFoods();
   }, []);
 
@@ -43,7 +41,7 @@ const ProductsPage = () => {
           <p className="text-xl leading-7 font-semibold text-foreground w-full mb-4">
             Dishes category
           </p>
-          <CreateCategoryDialog />
+          <CreateCategoryDialog refetchGetCategories={() => getCategories()} />
         </div>
 
         {/* {categories.map((category) => (
