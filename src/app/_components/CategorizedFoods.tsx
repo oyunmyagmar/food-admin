@@ -21,7 +21,7 @@ export const CategorizedFoods = ({
         <span className="ml-2">{foods.length}</span>
       </div>
       <AddNewFoodDialog
-        categoryId={category._id}
+        category={category}
         refetchGetNewFoods={refetchGetNewFoods}
       />
       {foods.map((food) => (

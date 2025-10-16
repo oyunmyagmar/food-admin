@@ -4,8 +4,10 @@ import {
   AdminLayout,
   CreateCategoryDialog,
   CategorizedFoods,
+  PrintCategoryDialog,
 } from "@/app/_components";
 import { CategoryType, NewFoodType } from "@/lib/types";
+import { Badge, Button } from "@/components/ui";
 
 const ProductsPage = () => {
   const [categories, setCategories] = useState<CategoryType[]>([]);
@@ -33,6 +35,10 @@ const ProductsPage = () => {
     getNewFoods();
   }, []);
 
+  const displayFoodsByCategory = (idCategory: string) => {
+    {
+    }
+  };
   return (
     <AdminLayout>
       <div className="h-100vh pl-6 pr-10 bg-secondary flex flex-col gap-6">
@@ -40,28 +46,30 @@ const ProductsPage = () => {
           <p className="text-xl leading-7 font-semibold text-foreground w-full mb-4">
             Dishes category
           </p>
-          <CreateCategoryDialog
-            refetchGetCategories={() => getCategories()}
-            categories={categories}
-          />
-        </div>
+          <div className="flex flex-wrap gap-3">
+            <Button
+              variant={"outline"}
+              className="rounded-full px-4 py-2 leading-5 text-secondary-foreground"
+            >
+              All Dishes
+              <Badge className="rounded-full px-2.5 leading-4 font-semibold">
+                {foods.length}
+              </Badge>
+            </Button>
 
-        {/* {categories.map((category) => (
-          <div
-            key={category._id}
-            className="p-5 bg-background rounded-xl flex flex-wrap gap-4"
-          >
-            <div className="w-full text-xl leading-7 font-semibold text-foreground mr-2">
-              {category.name} <span>(6)</span>
-            </div>
-            <CreateFoodDialog
-              categoryId={category._id}
-              categoryName={category.name}
+            {categories.map((category) => (
+              <PrintCategoryDialog
+                key={category._id}
+                category={category}
+                refetchGetCategories={() => getCategories()}
+              />
+            ))}
+            <CreateCategoryDialog
+              refetchGetCategories={() => getCategories()}
             />
           </div>
-        ))} */}
+        </div>
 
-        {/* add card initially foodCategory select-tei */}
         {categories.length > 0 &&
           categories.map((category) => {
             return (

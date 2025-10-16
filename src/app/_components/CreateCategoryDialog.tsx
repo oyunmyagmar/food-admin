@@ -11,18 +11,13 @@ import {
   DialogFooter,
   Input,
   Label,
-  Badge,
 } from "@/components/ui";
 import { IoCloseOutline, IoAddOutline } from "react-icons/io5";
-import { DeleteCategoryDialog } from "@/app/_components";
-import { CategoryType } from "@/lib/types";
 
 export const CreateCategoryDialog = ({
   refetchGetCategories,
-  categories,
 }: {
   refetchGetCategories: () => Promise<void>;
-  categories: CategoryType[];
 }) => {
   const [open, setOpen] = useState<boolean>(false);
   const [categoryName, setCategoryName] = useState<string>("");
@@ -56,88 +51,60 @@ export const CreateCategoryDialog = ({
   };
 
   return (
-    <div className="flex flex-wrap gap-3">
-      {categories.map((category) => (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
         <Button
-          key={category._id}
           type="button"
-          variant={"outline"}
-          className="rounded-full px-4 py-2"
+          variant={"destructive"}
+          className="cursor-pointer w-9 h-9 rounded-full bg-red-500"
+          onClick={() => setOpen(true)}
         >
-          <div className="flex gap-2 items-center">
-            <p className="leading-5 text-secondary-foreground">
-              {category.categoryName}
-            </p>
-
-            <Badge className="rounded-full px-2.5">
-              <p className="leading-4 font-semibold">{100}</p>
-            </Badge>
-
-            <DeleteCategoryDialog
-              refetchGetCategories={refetchGetCategories}
-              categoryId={category._id}
-            />
-          </div>
+          <IoAddOutline size={16} />
         </Button>
-      ))}
+      </DialogTrigger>
 
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button
-            type="button"
-            variant={"destructive"}
-            className="cursor-pointer w-9 h-9 rounded-full bg-red-500"
-            onClick={() => setOpen(true)}
-          >
-            <IoAddOutline size={16} />
-          </Button>
-        </DialogTrigger>
-
-        <DialogContent className="w-115 gap-6 rounded-xl">
-          <DialogHeader>
-            <DialogTitle className="flex gap-2.5 items-center mb-4">
-              <p className="flex-1 leading-7 text-foreground">
-                Add new category
-              </p>
-              <Button
-                type="button"
-                variant="secondary"
-                className="w-9 h-9 rounded-full"
-                onClick={() => setOpen(false)}
-              >
-                <IoCloseOutline size={16} />
-              </Button>
-            </DialogTitle>
-            <DialogDescription className="hidden" />
-          </DialogHeader>
-
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="categoryName" className="text-foreground">
-              Category name
-            </Label>
-            <Input
-              id="categoryName"
-              name="categoryName"
-              type="text"
-              placeholder="Type category name..."
-              className="text-sm leading-5 py-2"
-              value={categoryName}
-              onChange={categoryNameChangeHandler}
-            />
-          </div>
-
-          <DialogFooter className="mt-6">
+      <DialogContent className="w-115 gap-6 rounded-xl">
+        <DialogHeader>
+          <DialogTitle className="flex gap-2.5 items-center mb-4">
+            <p className="flex-1 leading-7 text-foreground">Add new category</p>
             <Button
               type="button"
-              onClick={createCategoryHandler}
-              size={"lg"}
-              className="w-fit leading-5 px-4"
+              variant="secondary"
+              className="w-9 h-9 rounded-full"
+              onClick={() => setOpen(false)}
             >
-              Add category
+              <IoCloseOutline size={16} />
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
+          </DialogTitle>
+          <DialogDescription className="hidden" />
+        </DialogHeader>
+
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="categoryName" className="text-foreground">
+            Category name
+          </Label>
+          <Input
+            id="categoryName"
+            name="categoryName"
+            type="text"
+            placeholder="Type category name..."
+            className="text-sm leading-5 py-2"
+            value={categoryName}
+            onChange={categoryNameChangeHandler}
+          />
+        </div>
+
+        <DialogFooter className="mt-6">
+          <Button
+            type="button"
+            onClick={createCategoryHandler}
+            size={"lg"}
+            className="w-fit leading-5 px-4"
+          >
+            Add category
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };

@@ -36,10 +36,8 @@ export const DeleteCategoryDialog = ({
   };
 
   return (
-    <div>
-      <div onClick={() => deleteCategoryHandler(categoryId)}>
-        <IoCloseOutline />
-      </div>
+    <div onClick={() => deleteCategoryHandler(categoryId)}>
+      <IoCloseOutline />
     </div>
   );
 };
