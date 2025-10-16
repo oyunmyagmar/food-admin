@@ -1,7 +1,7 @@
 import React from "react";
 import { Badge, Button } from "@/components/ui";
 import { DeleteCategoryDialog } from "./DeleteCategoryDialog";
-import { CategoryType } from "./types";
+import { CategoryType } from "@/lib/types";
 
 export const PrintCategoryDialog = ({
   categories,
@@ -21,7 +21,7 @@ export const PrintCategoryDialog = ({
         >
           <div className="flex gap-2 items-center">
             <p className="leading-5 text-secondary-foreground">
-              {category.name}
+              {category.categoryName}
             </p>
 
             <Badge className="rounded-full px-2.5">

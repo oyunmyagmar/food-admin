@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { EditFoodDialog } from "./EditFoodDialog";
-import { FoodType } from "./types";
+import { FoodType } from "@/lib/types";
 
 export const PrintFoodCards = ({
   foods,

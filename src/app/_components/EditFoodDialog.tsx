@@ -24,7 +24,7 @@ import { IoCloseOutline } from "react-icons/io5";
 import Image from "next/image";
 import { LuImage } from "react-icons/lu";
 import { LuTrash } from "react-icons/lu";
-import { CategoryType, FoodType } from "./types";
+import { CategoryType, FoodType } from "@/lib/types";
 
 export const EditFoodDialog = ({
   foodTitle,
@@ -183,7 +183,7 @@ export const EditFoodDialog = ({
 
                     {categories.map((el) => (
                       <SelectItem value={el._id} key={el._id}>
-                        {el.name}
+                        {el.categoryName}
                       </SelectItem>
                     ))}
                   </SelectGroup>

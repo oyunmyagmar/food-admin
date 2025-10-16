@@ -7,8 +7,8 @@ import {
   AddNewFoodDialog,
   EditNewFoodDialog,
 } from "@/app/_components";
-import { CategoryType, NewFoodType } from "../_components/types";
 import Image from "next/image";
+import { CategoryType, NewFoodType } from "@/lib/types";
 
 const ProductsPage = () => {
   const [categories, setCategories] = useState<CategoryType[]>([]);

@@ -24,8 +24,8 @@ import Image from "next/image";
 import { LuImage } from "react-icons/lu";
 import { GoPlus } from "react-icons/go";
 import { IoCloseOutline } from "react-icons/io5";
-import { CategoryType, NewFoodType } from "./types";
 import { PrintNewFoodCards } from "@/app/_components";
+import { CategoryType, NewFoodType } from "@/lib/types";
 
 export const AddNewFoodDialog = ({
   categories,
@@ -109,7 +109,7 @@ export const AddNewFoodDialog = ({
       <Dialog open={isOpen}>
         <DialogTrigger asChild>
           <div
-            className="w-[270.75px] h-[241px] py-2 px-4 border border-dashed border-red-500 flex flex-col items-center justify-center gap-6 rounded-[20px]"
+            className="cursor-pointer w-[270.75px] h-[241px] py-2 px-4 border border-dashed border-red-500 flex flex-col items-center justify-center gap-6 rounded-[20px]"
             onClick={() => setIsOpen(true)}
           >
             <Button

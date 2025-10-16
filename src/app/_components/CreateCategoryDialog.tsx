@@ -15,8 +15,8 @@ import {
 } from "@/components/ui";
 import { GoPlus } from "react-icons/go";
 import { IoCloseOutline } from "react-icons/io5";
-import { CategoryType } from "./types";
 import { DeleteCategoryDialog } from "./DeleteCategoryDialog";
+import { CategoryType } from "@/lib/types";
 
 export const CreateCategoryDialog = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -94,7 +94,7 @@ export const CreateCategoryDialog = () => {
           <Button
             type="button"
             variant={"destructive"}
-            className="w-9 h-9 rounded-full bg-red-500"
+            className="cursor-pointer w-9 h-9 rounded-full bg-red-500"
             onClick={() => setOpen(true)}
           >
             <GoPlus size={16} />

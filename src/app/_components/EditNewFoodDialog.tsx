@@ -24,7 +24,7 @@ import { IoCloseOutline } from "react-icons/io5";
 import Image from "next/image";
 import { LuImage } from "react-icons/lu";
 import { LuTrash } from "react-icons/lu";
-import { CategoryType, NewFoodType } from "./types";
+import { CategoryType } from "@/lib/types";
 
 export const EditNewFoodDialog = ({
   foodName,
@@ -139,7 +139,7 @@ export const EditNewFoodDialog = ({
           <Button
             type="button"
             variant="outline"
-            className="absolute w-11 h-11 rounded-full bottom-5 right-5"
+            className="cursor-pointer absolute w-11 h-11 rounded-full bottom-5 right-5"
             onClick={() => setEditIsOpen(true)}
           >
             <LuPen size={16} className="text-red-500" />
