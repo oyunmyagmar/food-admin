@@ -12,6 +12,7 @@ import { Badge, Button } from "@/components/ui";
 const ProductsPage = () => {
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [foods, setFoods] = useState<NewFoodType[]>([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>();
 
   const getCategories = async () => {
     const res = await fetch("http://localhost:4000/api/categories");
@@ -35,10 +36,26 @@ const ProductsPage = () => {
     getNewFoods();
   }, []);
 
-  const displayFoodsByCategory = (idCategory: string) => {
-    {
-    }
+  // const handleAllFoods = () => {
+  //   categories.length > 0 &&
+  //     categories.map((category) => {
+  //       return (
+  //         <CategorizedFoods
+  //           key={category._id}
+  //           refetchGetNewFoods={() => getNewFoods()}
+  //           foods={foods.filter((food) => food.categoryId._id === category._id)}
+  //           category={category}
+  //           categories={categories}
+  //         />
+  //       );
+  //     });
+  // };
+
+  const handleFilteredFoodsByCategories = (cateId: string) => {
+    setSelectedCategoryId(cateId);
+    console.log(selectedCategoryId);
   };
+
   return (
     <AdminLayout>
       <div className="h-100vh pl-6 pr-10 bg-secondary flex flex-col gap-6">
@@ -48,6 +65,7 @@ const ProductsPage = () => {
           </p>
           <div className="flex flex-wrap gap-3">
             <Button
+              // onClick={handleAllFoods}
               variant={"outline"}
               className="rounded-full px-4 py-2 leading-5 text-secondary-foreground"
             >
@@ -58,11 +76,19 @@ const ProductsPage = () => {
             </Button>
 
             {categories.map((category) => (
-              <PrintCategoryDialog
+              <Button
+                onClick={() => handleFilteredFoodsByCategories(category._id)}
                 key={category._id}
-                category={category}
-                refetchGetCategories={() => getCategories()}
-              />
+                type="button"
+                variant={"outline"}
+                className="rounded-full px-4 py-2"
+              >
+                <PrintCategoryDialog
+                  key={category._id}
+                  category={category}
+                  refetchGetCategories={() => getCategories()}
+                />
+              </Button>
             ))}
             <CreateCategoryDialog
               refetchGetCategories={() => getCategories()}
@@ -81,6 +107,7 @@ const ProductsPage = () => {
                 )}
                 category={category}
                 categories={categories}
+                selectedCategoryId={selectedCategoryId}
               />
             );
           })}

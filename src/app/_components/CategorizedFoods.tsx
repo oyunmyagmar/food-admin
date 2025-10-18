@@ -8,11 +8,13 @@ export const CategorizedFoods = ({
   foods,
   category,
   categories,
+  selectedCategoryId,
 }: {
   refetchGetNewFoods: () => Promise<void>;
   foods: NewFoodType[];
   category: CategoryType;
   categories: CategoryType[];
+  selectedCategoryId: string;
 }) => {
   return (
     <div className="p-5 bg-background rounded-xl flex flex-wrap gap-4">
