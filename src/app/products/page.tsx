@@ -12,7 +12,7 @@ import { Badge, Button } from "@/components/ui";
 const ProductsPage = () => {
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [foods, setFoods] = useState<NewFoodType[]>([]);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string>();
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
 
   const getCategories = async () => {
     const res = await fetch("http://localhost:4000/api/categories");
@@ -36,20 +36,7 @@ const ProductsPage = () => {
     getNewFoods();
   }, []);
 
-  // const handleAllFoods = () => {
-  //   categories.length > 0 &&
-  //     categories.map((category) => {
-  //       return (
-  //         <CategorizedFoods
-  //           key={category._id}
-  //           refetchGetNewFoods={() => getNewFoods()}
-  //           foods={foods.filter((food) => food.categoryId._id === category._id)}
-  //           category={category}
-  //           categories={categories}
-  //         />
-  //       );
-  //     });
-  // };
+  const handleDisplayAllFoods = () => {};
 
   const handleFilteredFoodsByCategories = (cateId: string) => {
     setSelectedCategoryId(cateId);
@@ -65,7 +52,7 @@ const ProductsPage = () => {
           </p>
           <div className="flex flex-wrap gap-3">
             <Button
-              // onClick={handleAllFoods}
+              onClick={handleDisplayAllFoods} // all dish darahad buh hool haragdah
               variant={"outline"}
               className="rounded-full px-4 py-2 leading-5 text-secondary-foreground"
             >
@@ -87,6 +74,8 @@ const ProductsPage = () => {
                   key={category._id}
                   category={category}
                   refetchGetCategories={() => getCategories()}
+                  selectedCategoryId={selectedCategoryId}
+                  foods={foods}
                 />
               </Button>
             ))}
@@ -96,21 +85,36 @@ const ProductsPage = () => {
           </div>
         </div>
 
-        {categories.length > 0 &&
-          categories.map((category) => {
-            return (
-              <CategorizedFoods
-                key={category._id}
-                refetchGetNewFoods={() => getNewFoods()}
-                foods={foods.filter(
-                  (food) => food.categoryId._id === category._id
-                )}
-                category={category}
-                categories={categories}
-                selectedCategoryId={selectedCategoryId}
-              />
-            );
-          })}
+        {selectedCategoryId
+          ? categories.length > 0 &&
+            categories.map(
+              (category) =>
+                category._id === selectedCategoryId && (
+                  <CategorizedFoods
+                    key={category._id}
+                    refetchGetNewFoods={() => getNewFoods()}
+                    foods={foods.filter(
+                      (food) => food.categoryId?._id === category._id
+                    )}
+                    category={category}
+                    categories={categories}
+                  />
+                )
+            )
+          : categories.length > 0 &&
+            categories.map((category) => {
+              return (
+                <CategorizedFoods
+                  key={category._id}
+                  refetchGetNewFoods={() => getNewFoods()}
+                  foods={foods.filter(
+                    (food) => food.categoryId?._id === category._id
+                  )}
+                  category={category}
+                  categories={categories}
+                />
+              );
+            })}
       </div>
     </AdminLayout>
   );
