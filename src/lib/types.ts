@@ -1,6 +1,7 @@
 export type CategoryType = {
   _id: string;
   categoryName: string;
+  foods: NewFoodType[];
 };
 
 export type NewFoodType = {

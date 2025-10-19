@@ -21,20 +21,22 @@ const ProductsPage = () => {
 
     setCategories(data);
   };
+
   useEffect(() => {
     getCategories();
   }, []);
 
-  const getNewFoods = async () => {
-    const res = await fetch("http://localhost:4000/api/newfoods");
-    const resData = await res.json();
-    const { data } = resData;
+  // const getNewFoods = async () => {
+  //   const res = await fetch("http://localhost:4000/api/newfoods");
+  //   const resData = await res.json();
+  //   const { data } = resData;
 
-    setFoods(data);
-  };
-  useEffect(() => {
-    getNewFoods();
-  }, []);
+  //   setFoods(data);
+  // };
+
+  // useEffect(() => {
+  //   getNewFoods();
+  // }, []);
 
   const handleDisplayAllFoods = () => {};
 
@@ -62,29 +64,46 @@ const ProductsPage = () => {
               </Badge>
             </Button>
 
-            {categories.map((category) => (
-              <Button
-                onClick={() => handleFilteredFoodsByCategories(category._id)}
-                key={category._id}
-                type="button"
-                variant={"outline"}
-                className="rounded-full px-4 py-2"
-              >
-                <PrintCategoryDialog
-                  key={category._id}
-                  category={category}
-                  refetchGetCategories={() => getCategories()}
-                  selectedCategoryId={selectedCategoryId}
-                  foods={foods}
-                />
-              </Button>
-            ))}
+            {categories.length > 0
+              ? categories.map((category, i) => {
+                  const { categoryName, _id } = category;
+                  return (
+                    <div className="px-4 py-2 text-sm border border-border rounded-full flex gap-2 items-center">
+                      <div className="font-medium">{categoryName}</div>
+                      <div className="font-semibold py-0.5 px-2.5 bg-black rounded-full text-white">
+                        {category.foods?.length}
+                      </div>
+                    </div>
+
+                    // <div className="text-sm leadin">
+                    //   {/* {categoryName} <div>{i + 1}</div> */}
+                    // </div>
+                  );
+                  // <Button
+                  //   onClick={() => handleFilteredFoodsByCategories(category._id)}
+                  //   key={category._id}
+                  //   type="button"
+                  //   variant={"outline"}
+                  //   className="rounded-full px-4 py-2"
+                  // >
+                  //   <PrintCategoryDialog
+                  //     key={category._id}
+                  //     category={category}
+                  //     refetchGetCategories={() => getCategories()}
+                  //     selectedCategoryId={selectedCategoryId}
+                  //     foods={foods}
+                  //   />
+                  // </Button>
+                })
+              : null}
             <CreateCategoryDialog
               refetchGetCategories={() => getCategories()}
             />
           </div>
         </div>
+        {/* 
 
+        categories.find(()=> ).map((item))
         {selectedCategoryId
           ? categories.length > 0 &&
             categories.map(
@@ -114,7 +133,7 @@ const ProductsPage = () => {
                   categories={categories}
                 />
               );
-            })}
+            })} */}
       </div>
     </AdminLayout>
   );
