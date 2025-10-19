@@ -1,7 +1,7 @@
 export type CategoryType = {
   _id: string;
   categoryName: string;
-  foods: NewFoodType[];
+  // foods: NewFoodType[];
 };
 
 export type NewFoodType = {
@@ -14,22 +14,23 @@ export type NewFoodType = {
 };
 
 // before filter
-export type NewFoodTypeBeforeEdit = {
-  _id: string;
-  foodName: string;
-  price: number;
-  category: string;
-  ingredients: string;
-  image: string;
-};
+// export type NewFoodTypeBeforeEdit = {
+//   _id: string;
+//   foodName: string;
+//   price: number;
+//   category: string;
+//   ingredients: string;
+//   image: string;
+// };
 // hereglegdehgui
-export interface FoodType {
-  _id: string;
-  name: string;
-  price: number;
-  image: string;
-  ingredients: string;
-  category?: string;
-  createdAt?: Date;
-  updated?: Date;
-}
+
+// export interface FoodType {
+//   _id: string;
+//   name: string;
+//   price: number;
+//   image: string;
+//   ingredients: string;
+//   category?: string;
+//   createdAt?: Date;
+//   updated?: Date;
+// }

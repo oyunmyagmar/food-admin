@@ -26,17 +26,17 @@ const ProductsPage = () => {
     getCategories();
   }, []);
 
-  // const getNewFoods = async () => {
-  //   const res = await fetch("http://localhost:4000/api/newfoods");
-  //   const resData = await res.json();
-  //   const { data } = resData;
+  const getNewFoods = async () => {
+    const res = await fetch("http://localhost:4000/api/newfoods");
+    const resData = await res.json();
+    const { data } = resData;
 
-  //   setFoods(data);
-  // };
+    setFoods(data);
+  };
 
-  // useEffect(() => {
-  //   getNewFoods();
-  // }, []);
+  useEffect(() => {
+    getNewFoods();
+  }, []);
 
   const handleDisplayAllFoods = () => {};
 
@@ -48,15 +48,16 @@ const ProductsPage = () => {
   return (
     <AdminLayout>
       <div className="h-100vh pl-6 pr-10 bg-secondary flex flex-col gap-6">
-        <div className="p-6 bg-background rounded-xl">
-          <p className="text-xl leading-7 font-semibold text-foreground w-full mb-4">
+        <div className="p-6 bg-background rounded-xl flex flex-col gap-4">
+          <div className="w-full text-xl leading-7 font-semibold text-foreground">
             Dishes category
-          </p>
+          </div>
+
           <div className="flex flex-wrap gap-3">
             <Button
               onClick={handleDisplayAllFoods} // all dish darahad buh hool haragdah
               variant={"outline"}
-              className="rounded-full px-4 py-2 leading-5 text-secondary-foreground"
+              className="rounded-full px-4 py-2 leading-5 text-secondary-foreground items-center"
             >
               All Dishes
               <Badge className="rounded-full px-2.5 leading-4 font-semibold">
@@ -65,35 +66,25 @@ const ProductsPage = () => {
             </Button>
 
             {categories.length > 0
-              ? categories.map((category, i) => {
+              ? categories.map((category) => {
                   const { categoryName, _id } = category;
                   return (
-                    <div className="px-4 py-2 text-sm border border-border rounded-full flex gap-2 items-center">
-                      <div className="font-medium">{categoryName}</div>
-                      <div className="font-semibold py-0.5 px-2.5 bg-black rounded-full text-white">
-                        {category.foods?.length}
-                      </div>
-                    </div>
-
-                    // <div className="text-sm leadin">
-                    //   {/* {categoryName} <div>{i + 1}</div> */}
-                    // </div>
+                    <Button
+                      onClick={() => handleFilteredFoodsByCategories(_id)}
+                      key={_id}
+                      type="button"
+                      variant={"outline"}
+                      className="rounded-full px-4 py-2"
+                    >
+                      <PrintCategoryDialog
+                        key={_id}
+                        _id={_id}
+                        categoryName={categoryName}
+                        refetchGetCategories={() => getCategories()}
+                        foods={foods}
+                      />
+                    </Button>
                   );
-                  // <Button
-                  //   onClick={() => handleFilteredFoodsByCategories(category._id)}
-                  //   key={category._id}
-                  //   type="button"
-                  //   variant={"outline"}
-                  //   className="rounded-full px-4 py-2"
-                  // >
-                  //   <PrintCategoryDialog
-                  //     key={category._id}
-                  //     category={category}
-                  //     refetchGetCategories={() => getCategories()}
-                  //     selectedCategoryId={selectedCategoryId}
-                  //     foods={foods}
-                  //   />
-                  // </Button>
                 })
               : null}
             <CreateCategoryDialog
@@ -101,9 +92,7 @@ const ProductsPage = () => {
             />
           </div>
         </div>
-        {/* 
 
-        categories.find(()=> ).map((item))
         {selectedCategoryId
           ? categories.length > 0 &&
             categories.map(
@@ -133,9 +122,27 @@ const ProductsPage = () => {
                   categories={categories}
                 />
               );
-            })} */}
+            })}
       </div>
     </AdminLayout>
   );
 };
 export default ProductsPage;
+
+// {
+//   categories.length > 0
+//     ? categories.map((category, i) => {
+//         const { categoryName, _id } = category;
+//         return (
+//           <div className="px-4 py-2 text-sm border border-border rounded-full flex gap-2 items-center">
+//             <div className="font-medium">{categoryName}</div>
+//             <div className="font-semibold py-0.5 px-2.5 bg-black rounded-full text-white">
+//               {category.foods?.length}
+//             </div>
+//           </div>
+//         );
+//       })
+//     : null;
+// }
+
+//         categories.find(()=> ).map((item))
