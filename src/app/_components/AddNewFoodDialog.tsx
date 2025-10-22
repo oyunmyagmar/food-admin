@@ -47,7 +47,7 @@ export const AddNewFoodDialog = ({
     newForm.append("ingredients", ingredients);
     newForm.append("image", image); // File object
 
-    await fetch("http://localhost:4000/api/newfoods", {
+    await fetch("https://food-next-backend.vercel.app/api/newfoods", {
       method: "POST",
       body: newForm,
     });
