@@ -62,7 +62,7 @@ export const EditNewFoodDialog = ({
     } else editedForm.append("editedImage", food.image);
     editedForm.append("selectedFoodId", food._id);
 
-    await fetch(`https://food-next-backend.vercel.app/api/newfoods`, {
+    await fetch(`http://localhost:4000/api/newfoods`, {
       method: "PUT",
       body: editedForm,
     });
@@ -76,7 +76,7 @@ export const EditNewFoodDialog = ({
     if (confirm("Are you sure you want to delete this food?")) {
       try {
         const response = await fetch(
-          `https://food-next-backend.vercel.app/api/newfoods/${foodId}`,
+          `http://localhost:4000/api/newfoods/${foodId}`,
           {
             method: "DELETE",
           }

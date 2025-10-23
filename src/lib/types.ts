@@ -13,6 +13,24 @@ export type NewFoodType = {
   image: string;
 };
 
+export type UserType = {
+  _id?: string;
+  email: string;
+  password: string;
+  phonenumber: string;
+  address: string;
+  role: string;
+  isVerified: boolean;
+};
+
+export type OrderType = {
+  _id: string;
+  user: UserType;
+  totalPrice: number;
+  foodOrderItems: { food: NewFoodType; quantity: number }[];
+  status: string;
+};
+
 // before filter
 // export type NewFoodTypeBeforeEdit = {
 //   _id: string;

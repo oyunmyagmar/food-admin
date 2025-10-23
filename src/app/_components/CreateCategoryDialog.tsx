@@ -29,7 +29,7 @@ export const CreateCategoryDialog = ({
     }
 
     try {
-      await fetch("https://food-next-backend.vercel.app/api/categories", {
+      await fetch("http://localhost:4000/api/categories", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

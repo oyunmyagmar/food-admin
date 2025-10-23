@@ -15,9 +15,7 @@ const ProductsPage = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
 
   const getCategories = async () => {
-    const res = await fetch(
-      "https://food-next-backend.vercel.app/api/categories"
-    );
+    const res = await fetch("http://localhost:4000/api/categories");
     const resData = await res.json();
     const { data } = resData;
 
@@ -29,9 +27,7 @@ const ProductsPage = () => {
   }, []);
 
   const getNewFoods = async () => {
-    const res = await fetch(
-      "https://food-next-backend.vercel.app/api/newfoods"
-    );
+    const res = await fetch("http://localhost:4000/api/newfoods");
     const resData = await res.json();
     const { data } = resData;
 
