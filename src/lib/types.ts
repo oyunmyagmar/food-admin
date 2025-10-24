@@ -25,7 +25,7 @@ export type UserType = {
 
 export type OrderType = {
   _id: string;
-  user?: UserType; //ObjectId
+  userId: UserType;
   totalPrice: number;
   foodOrderItems: { food: NewFoodType; quantity: number }[];
   status: string;

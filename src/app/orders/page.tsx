@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { AdminLayout } from "../_components";
-import { OrderType } from "@/lib/types";
+import { OrderType, UserType } from "@/lib/types";
 import {
   Table,
   TableBody,
@@ -16,6 +16,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  Button,
 } from "@/components/ui";
 
 const OrdersPage = () => {
@@ -30,66 +31,76 @@ const OrdersPage = () => {
 
     setOrders(data);
   };
-
   useEffect(() => {
     getOrders();
   }, []);
 
   return (
     <AdminLayout>
-      <div>
-        <Table>
-          <TableCaption>A list of your recent invoices.</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead>
-                <Checkbox />
-              </TableHead>
-              <TableHead>#</TableHead>
-              <TableHead>Customer</TableHead>
-              <TableHead>Food</TableHead>
-              <TableHead>Amount</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Total</TableHead>
-              <TableHead>Delivery Address</TableHead>
-              <TableHead>Delivery state</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow>
-              {orders.map((order, i) => (
-                <div>
+      <div className="h-100vh pl-6 pr-10 bg-secondary flex flex-col">
+        <div className="w-full h-500 rounded-lg bg-background">
+          <div className="p-4 rounded-t-lg">
+            <div>
+              <div className="bg-background">Orders</div>
+              <div>{orders.length}</div>
+            </div>
+            <div></div>
+            <div>
+              <Button>Change delivery state</Button>
+            </div>
+          </div>
+
+          <Table>
+            <TableCaption />
+            <TableHeader>
+              <TableRow>
+                <TableHead>
+                  <Checkbox />
+                </TableHead>
+                <TableHead>#</TableHead>
+                <TableHead>Customer</TableHead>
+                <TableHead>Food</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead>Total</TableHead>
+                <TableHead>Delivery Address</TableHead>
+                <TableHead>Delivery state</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {orders?.map((order, i) => (
+                <TableRow key={order._id}>
                   <TableCell>
                     <Checkbox />
                   </TableCell>
                   <TableCell>{i + 1}</TableCell>
-                  <TableCell>{"customer"}</TableCell>{" "}
-                  <TableCell>{"123@gmail.com"}</TableCell>
+                  <TableCell>{order.userId.email}</TableCell>
                   <TableCell>
                     <Select>
                       <SelectTrigger>
-                        <SelectValue placeholder="foods" />
+                        <SelectValue
+                          placeholder={`foods ${order.foodOrderItems.length}`}
+                        />
                       </SelectTrigger>
                       <SelectContent>
-                        {order.foodOrderItems.map((item) => (
-                          <SelectItem value="light">
+                        {order.foodOrderItems?.map((item) => (
+                          <SelectItem key={item.food._id} value="light">
                             {item.food.foodName}
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </TableCell>
-                  <TableCell>{order.createdAt}</TableCell>
                   <TableCell>
-                    {order.foodOrderItems.map((item) => item.food.price)}
+                    {order.createdAt?.toLocaleString().split("T")[0]}
                   </TableCell>
-                  <TableCell>{"delivery address"}</TableCell>
-                  <TableCell>8</TableCell>
-                </div>
+                  <TableCell>${order.totalPrice}</TableCell>
+                  <TableCell>{order.userId.address}</TableCell>
+                  <TableCell>{order.status}</TableCell>
+                </TableRow>
               ))}
-            </TableRow>
-          </TableBody>
-        </Table>
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </AdminLayout>
   );
