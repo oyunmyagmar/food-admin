@@ -4,9 +4,11 @@ import { IoCloseOutline } from "react-icons/io5";
 export const DeleteCategoryDialog = ({
   refetchGetCategories,
   categoryId,
+  setSelectedCategoryId,
 }: {
   refetchGetCategories: () => Promise<void>;
   categoryId: string;
+  setSelectedCategoryId: (selectedCategoryId: string) => void;
 }) => {
   const deleteCategoryHandler = async (id: string) => {
     if (confirm("Are you sure you want to delete this category?")) {
@@ -29,6 +31,7 @@ export const DeleteCategoryDialog = ({
         const resultText = await response.text();
         console.log(`Delete successful, ${resultText}`);
         await refetchGetCategories();
+        setSelectedCategoryId("");
       } catch (error) {
         console.error("Network or unexpected error:", error);
       }
@@ -37,7 +40,7 @@ export const DeleteCategoryDialog = ({
 
   return (
     <div onClick={() => deleteCategoryHandler(categoryId)}>
-      <IoCloseOutline />
+      <IoCloseOutline size={16} />
     </div>
   );
 };

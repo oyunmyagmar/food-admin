@@ -92,18 +92,18 @@ export const AddNewFoodDialog = ({
           >
             <IoAddOutline size={16} />
           </Button>
-          <p className="w-[154px] text-center text-sm leading-5 font-medium text-secondary-foreground">
+          <div className="w-[154px] text-center text-sm leading-5 font-medium text-secondary-foreground">
             Add new Dish to {category.categoryName}
-          </p>
+          </div>
         </div>
       </DialogTrigger>
 
       <DialogContent className="w-115 gap-6 rounded-xl">
         <DialogHeader className="gap-0">
           <DialogTitle className="flex gap-2.5 items-center mb-4">
-            <p className="flex-1 leading-7 text-foreground">
+            <div className="flex-1 leading-7 text-foreground">
               Add new Dish to {category.categoryName}
-            </p>
+            </div>
             <Button
               type="button"
               variant="secondary"
@@ -113,7 +113,7 @@ export const AddNewFoodDialog = ({
               <IoCloseOutline size={16} />
             </Button>
           </DialogTitle>
-          <DialogDescription className="hidden" />
+          <DialogDescription />
         </DialogHeader>
 
         <div className="flex gap-6">
@@ -200,9 +200,9 @@ export const AddNewFoodDialog = ({
                 <div className="w-8 h-8 rounded-full bg-background flex justify-center items-center">
                   <LuImage size={16} />
                 </div>
-                <p className="text-sm leading-5 font-medium text-primary">
+                <div className="text-sm leading-5 font-medium text-primary">
                   Choose a file or drag & drop it here
-                </p>
+                </div>
               </div>
             </div>
           )}
@@ -212,7 +212,7 @@ export const AddNewFoodDialog = ({
           <Button
             type="button"
             size={"lg"}
-            className="w-fit leading-5 px-4"
+            className="w-fit px-4"
             onClick={addFoodHandler}
           >
             Add Dish

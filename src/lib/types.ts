@@ -43,14 +43,3 @@ export type OrderType = {
 //   image: string;
 // };
 // hereglegdehgui
-
-// export interface FoodType {
-//   _id: string;
-//   name: string;
-//   price: number;
-//   image: string;
-//   ingredients: string;
-//   category?: string;
-//   createdAt?: Date;
-//   updated?: Date;
-// }

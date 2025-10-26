@@ -1,42 +1,18 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   AdminLayout,
   CreateCategoryDialog,
   CategorizedFoods,
   PrintCategoryDialog,
 } from "@/app/_components";
-import { CategoryType, NewFoodType } from "@/lib/types";
 import { Badge, Button } from "@/components/ui";
+import { useFood } from "../_hooks/use-food";
 
 const ProductsPage = () => {
-  const [categories, setCategories] = useState<CategoryType[]>([]);
-  const [foods, setFoods] = useState<NewFoodType[]>([]);
+  const { categories, foods, refetchGetCategories, refetchGetNewFoods } =
+    useFood();
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
-
-  const getCategories = async () => {
-    const res = await fetch("http://localhost:4000/api/categories");
-    const resData = await res.json();
-    const { data } = resData;
-
-    setCategories(data);
-  };
-
-  useEffect(() => {
-    getCategories();
-  }, []);
-
-  const getNewFoods = async () => {
-    const res = await fetch("http://localhost:4000/api/newfoods");
-    const resData = await res.json();
-    const { data } = resData;
-
-    setFoods(data);
-  };
-
-  useEffect(() => {
-    getNewFoods();
-  }, []);
 
   const handleDisplayAllFoods = () => {
     setSelectedCategoryId("");
@@ -44,12 +20,12 @@ const ProductsPage = () => {
 
   const handleFilteredFoodsByCategories = (cateId: string) => {
     setSelectedCategoryId(cateId);
-    console.log(selectedCategoryId);
+    // console.log(selectedCategoryId);
   };
 
   return (
     <AdminLayout>
-      <div className="h-100vh pl-6 pr-10 bg-secondary flex flex-col gap-6">
+      <div className="w-[1171px] h-100vh ml-6 mr-10 bg-secondary flex flex-col gap-6">
         <div className="p-6 bg-background rounded-xl flex flex-col gap-4">
           <div className="w-full text-xl leading-7 font-semibold text-foreground">
             Dishes category
@@ -57,9 +33,11 @@ const ProductsPage = () => {
 
           <div className="flex flex-wrap gap-3">
             <Button
-              onClick={handleDisplayAllFoods} // all dish darahad buh hool haragdah
+              onClick={handleDisplayAllFoods}
               variant={"outline"}
-              className="rounded-full px-4 py-2 leading-5 text-secondary-foreground items-center"
+              className={`rounded-full px-4 py-2 leading-5 text-secondary-foreground items-center ${
+                !selectedCategoryId && "border-red-500"
+              }`}
             >
               All Dishes
               <Badge className="rounded-full px-2.5 leading-4 font-semibold">
@@ -76,21 +54,25 @@ const ProductsPage = () => {
                       key={_id}
                       type="button"
                       variant={"outline"}
-                      className="rounded-full px-4 py-2"
+                      className={`rounded-full px-4 py-2 ${
+                        selectedCategoryId === _id && "border-red-500"
+                      }`}
                     >
                       <PrintCategoryDialog
                         key={_id}
                         _id={_id}
                         categoryName={categoryName}
-                        refetchGetCategories={() => getCategories()}
+                        refetchGetCategories={() => refetchGetCategories()}
                         foods={foods}
+                        setSelectedCategoryId={setSelectedCategoryId}
                       />
                     </Button>
                   );
                 })
               : null}
+
             <CreateCategoryDialog
-              refetchGetCategories={() => getCategories()}
+              refetchGetCategories={() => refetchGetCategories()}
             />
           </div>
         </div>
@@ -102,7 +84,7 @@ const ProductsPage = () => {
                 category._id === selectedCategoryId && (
                   <CategorizedFoods
                     key={category._id}
-                    refetchGetNewFoods={() => getNewFoods()}
+                    refetchGetNewFoods={() => refetchGetNewFoods()}
                     foods={foods.filter(
                       (food) => food.categoryId?._id === category._id
                     )}
@@ -116,7 +98,7 @@ const ProductsPage = () => {
               return (
                 <CategorizedFoods
                   key={category._id}
-                  refetchGetNewFoods={() => getNewFoods()}
+                  refetchGetNewFoods={() => refetchGetNewFoods()}
                   foods={foods.filter(
                     (food) => food.categoryId?._id === category._id
                   )}
@@ -130,21 +112,3 @@ const ProductsPage = () => {
   );
 };
 export default ProductsPage;
-
-// {
-//   categories.length > 0
-//     ? categories.map((category, i) => {
-//         const { categoryName, _id } = category;
-//         return (
-//           <div className="px-4 py-2 text-sm border border-border rounded-full flex gap-2 items-center">
-//             <div className="font-medium">{categoryName}</div>
-//             <div className="font-semibold py-0.5 px-2.5 bg-black rounded-full text-white">
-//               {category.foods?.length}
-//             </div>
-//           </div>
-//         );
-//       })
-//     : null;
-// }
-
-//         categories.find(()=> ).map((item))

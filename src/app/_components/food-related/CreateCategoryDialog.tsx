@@ -63,10 +63,12 @@ export const CreateCategoryDialog = ({
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="w-115 gap-6 rounded-xl">
+      <DialogContent className="w-115 gap-10 rounded-xl">
         <DialogHeader>
-          <DialogTitle className="flex gap-2.5 items-center mb-4">
-            <p className="flex-1 leading-7 text-foreground">Add new category</p>
+          <DialogTitle className="flex gap-2.5 items-center">
+            <div className="flex-1 leading-7 text-foreground">
+              Add new category
+            </div>
             <Button
               type="button"
               variant="secondary"
@@ -94,12 +96,12 @@ export const CreateCategoryDialog = ({
           />
         </div>
 
-        <DialogFooter className="mt-6">
+        <DialogFooter className="mt-2">
           <Button
             type="button"
             onClick={createCategoryHandler}
             size={"lg"}
-            className="w-fit leading-5 px-4"
+            className="w-fit px-4"
           >
             Add category
           </Button>

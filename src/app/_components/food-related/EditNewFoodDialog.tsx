@@ -39,7 +39,6 @@ export const EditNewFoodDialog = ({
   const [editedImagePreview, setEditedImagePreview] = useState<string>(
     food.image
   );
-
   const [editedFoodName, setEditedFoodName] = useState<string>(food.foodName);
   const [editedCategorySelected, setEditedCategorySelected] = useState<string>(
     category._id
@@ -103,7 +102,7 @@ export const EditNewFoodDialog = ({
     setEditedFoodName(e.target.value);
   };
   const categoryChangeHandler = (value: string) => {
-    console.log("SELECT VALUE", value);
+    // console.log("SELECT VALUE", value);
     setEditedCategorySelected(value);
   };
   const ingredientsChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {

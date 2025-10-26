@@ -23,6 +23,7 @@ export const OrderStatus = ({
   const orderStatusChangeHandler = (value: string) => {
     setStatus(value);
   };
+
   return (
     <Select onValueChange={orderStatusChangeHandler}>
       <SelectTrigger
@@ -36,7 +37,9 @@ export const OrderStatus = ({
       </SelectTrigger>
       <SelectContent>
         {foodOrderStatus?.map((statusItem) => (
-          <SelectItem value={statusItem}>{statusItem}</SelectItem>
+          <SelectItem key={statusItem} value={statusItem}>
+            {statusItem}
+          </SelectItem>
         ))}
       </SelectContent>
     </Select>
