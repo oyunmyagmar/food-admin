@@ -1,11 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { AdminLayout } from "../_components";
+import { AdminLayout, OrderStatus } from "@/app/_components";
 import { OrderType, UserType } from "@/lib/types";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -21,8 +20,6 @@ import {
 
 const OrdersPage = () => {
   const [orders, setOrders] = useState<OrderType[]>([]);
-  const orderStatus = ["PENDING", "CANCELED", "DELIVERED"];
-  const [status, setStatus] = useState<string>(orderStatus[0]);
 
   const getOrders = async () => {
     const res = await fetch("http://localhost:4000/api/orders");
@@ -114,18 +111,7 @@ const OrdersPage = () => {
                   <TableCell>{order.userId.address}</TableCell>
 
                   <TableCell>
-                    <Select>
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {orderStatus?.map((orderStatus) => (
-                          <SelectItem value={orderStatus}>
-                            {orderStatus}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <OrderStatus order={order} orderStatus={order.status} />
                   </TableCell>
                 </TableRow>
               ))}

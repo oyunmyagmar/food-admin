@@ -8,3 +8,4 @@ export * from "./AddNewFoodDialog";
 export * from "./EditNewFoodDialog";
 export * from "./CategorizedFoods";
 export * from "./SideBarLogoImg";
+export * from "./OrderStatus";
