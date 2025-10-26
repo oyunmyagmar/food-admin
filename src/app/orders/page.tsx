@@ -21,6 +21,8 @@ import {
 
 const OrdersPage = () => {
   const [orders, setOrders] = useState<OrderType[]>([]);
+  const orderStatus = ["PENDING", "CANCELED", "DELIVERED"];
+  const [status, setStatus] = useState<string>(orderStatus[0]);
 
   const getOrders = async () => {
     const res = await fetch("http://localhost:4000/api/orders");
@@ -37,21 +39,26 @@ const OrdersPage = () => {
 
   return (
     <AdminLayout>
-      <div className="h-100vh pl-6 pr-10 bg-secondary flex flex-col">
+      <div className="w-[1171px] h-100vh ml-6 mr-10 bg-secondary flex flex-col">
         <div className="w-full h-500 rounded-lg bg-background">
-          <div className="p-4 rounded-t-lg">
+          <div className="flex justify-between items-center p-4">
             <div>
-              <div className="bg-background">Orders</div>
-              <div>{orders.length}</div>
+              <div className="text-xl leading-7 font-bold text-foreground">
+                Orders
+              </div>
+              <div className="text-xs leading-4 font-medium text-muted-foreground">
+                {orders.length} items
+              </div>
             </div>
-            <div></div>
-            <div>
-              <Button>Change delivery state</Button>
+            <div className="flex gap-3 items-center">
+              <div>Date picker from to</div>
+              <div>
+                <Button className="rounded-full">Change delivery state</Button>
+              </div>
             </div>
           </div>
 
           <Table>
-            <TableCaption />
             <TableHeader>
               <TableRow>
                 <TableHead>
@@ -66,14 +73,18 @@ const OrdersPage = () => {
                 <TableHead>Delivery state</TableHead>
               </TableRow>
             </TableHeader>
+
             <TableBody>
               {orders?.map((order, i) => (
                 <TableRow key={order._id}>
                   <TableCell>
                     <Checkbox />
                   </TableCell>
+
                   <TableCell>{i + 1}</TableCell>
+
                   <TableCell>{order.userId.email}</TableCell>
+
                   <TableCell>
                     <Select>
                       <SelectTrigger>
@@ -82,20 +93,40 @@ const OrdersPage = () => {
                         />
                       </SelectTrigger>
                       <SelectContent>
-                        {order.foodOrderItems?.map((item) => (
-                          <SelectItem key={item.food._id} value="light">
-                            {item.food.foodName}
+                        {order.foodOrderItems?.map((foodOrderItem) => (
+                          <SelectItem
+                            key={foodOrderItem.food._id}
+                            value={foodOrderItem.food.foodName}
+                          >
+                            {foodOrderItem.food.foodName}
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </TableCell>
+
                   <TableCell>
                     {order.createdAt?.toLocaleString().split("T")[0]}
                   </TableCell>
+
                   <TableCell>${order.totalPrice}</TableCell>
+
                   <TableCell>{order.userId.address}</TableCell>
-                  <TableCell>{order.status}</TableCell>
+
+                  <TableCell>
+                    <Select>
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {orderStatus?.map((orderStatus) => (
+                          <SelectItem value={orderStatus}>
+                            {orderStatus}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
