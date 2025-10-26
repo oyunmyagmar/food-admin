@@ -35,7 +35,7 @@ const ProductsPage = () => {
             <Button
               onClick={handleDisplayAllFoods}
               variant={"outline"}
-              className={`rounded-full px-4 py-2 leading-5 text-secondary-foreground items-center ${
+              className={`rounded-full px-4 py-2 leading-5 text-secondary-foreground items-center cursor-pointer ${
                 !selectedCategoryId && "border-red-500"
               }`}
             >
@@ -54,7 +54,7 @@ const ProductsPage = () => {
                       key={_id}
                       type="button"
                       variant={"outline"}
-                      className={`rounded-full px-4 py-2 ${
+                      className={`rounded-full px-4 py-2 cursor-pointer ${
                         selectedCategoryId === _id && "border-red-500"
                       }`}
                     >
