@@ -35,7 +35,7 @@ export const SideBar = () => {
   };
 
   return (
-    <div className="w-[205px] h-screen bg-background py-9 px-5">
+    <div className="w-[205px] bg-background py-9 px-5">
       <div className="flex flex-col gap-10">
         <div
           onClick={() => router.push("/")}
