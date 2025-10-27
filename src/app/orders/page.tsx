@@ -20,6 +20,7 @@ import {
 
 const OrdersPage = () => {
   const [orders, setOrders] = useState<OrderType[]>([]);
+  const [isSelected, setIsSelected] = useState<boolean>(false);
 
   const getOrders = async () => {
     const res = await fetch("http://localhost:4000/api/orders");
@@ -34,6 +35,11 @@ const OrdersPage = () => {
     getOrders();
   }, []);
 
+  const checkboxToggle = (orderId: string) => {
+    setIsSelected(!isSelected);
+
+    console.log(isSelected ? orderId : "select hiigeegui", "id");
+  };
   return (
     <AdminLayout>
       <div className="w-[1171px] h-100vh ml-6 mr-10 bg-secondary flex flex-col">
@@ -75,7 +81,10 @@ const OrdersPage = () => {
               {orders?.map((order, i) => (
                 <TableRow key={order._id}>
                   <TableCell>
-                    <Checkbox />
+                    <Checkbox
+                      onClick={() => checkboxToggle(order._id)}
+                      defaultChecked={isSelected}
+                    />
                   </TableCell>
 
                   <TableCell>{i + 1}</TableCell>
