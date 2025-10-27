@@ -5,11 +5,11 @@ import { Button } from "@/components/ui";
 import { LuLayoutDashboard, LuSettings } from "react-icons/lu";
 import { LiaTruckMovingSolid } from "react-icons/lia";
 import { SideBarLogoImg } from "@/app/_components";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export const SideBar = () => {
+  const currentPathname = usePathname();
   const router = useRouter();
-  const [active, setActive] = useState<string>("");
   const sideBarBtns = [
     {
       btnName: "Food menu",
@@ -28,10 +28,7 @@ export const SideBar = () => {
     },
   ];
   const handleBtn = (btnPath: string) => {
-    setActive(btnPath);
     router.push(`${btnPath}`);
-    setActive(btnPath);
-    console.log(active, "activeUrl");
   };
 
   return (
@@ -61,7 +58,7 @@ export const SideBar = () => {
               asChild
               size={"lg"}
               className={`rounded-full cursor-pointer justify-start gap-2.5 hover:none ${
-                active === sideBarBtn.btnPath
+                currentPathname === sideBarBtn.btnPath
                   ? "bg-primary text-primary-foreground hover:bg-primary-foreground hover:text-primary"
                   : "bg-background text-foreground hover:bg-foreground hover:text-background"
               }`}
