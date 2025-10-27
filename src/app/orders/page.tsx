@@ -21,6 +21,7 @@ import {
 const OrdersPage = () => {
   const [orders, setOrders] = useState<OrderType[]>([]);
   const [isSelected, setIsSelected] = useState<boolean>(false);
+  const [selectedOrder, setSelectedOrder] = useState<string>("");
 
   const getOrders = async () => {
     const res = await fetch("http://localhost:4000/api/orders");
