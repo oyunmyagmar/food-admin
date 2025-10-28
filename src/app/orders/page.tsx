@@ -20,30 +20,29 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const OrdersPage = () => {
-  let foodOrderStatuses = [
-    { value: "PENDING", label: "PENDING" },
-    { value: "CANCELED", label: "CANCELED" },
-    { value: "DELIVERED", label: "DELIVERED" },
-  ];
-
   const [orders, setOrders] = useState<OrderType[]>([]);
-  const [open, setOpen] = useState<boolean>(false);
+  let foodOrderStatuses = ["PENDING", "CANCELED", "DELIVERED"];
   const [value, setValue] = useState<string>("");
-  console.log(value, "SELECTEDVALUE");
+  console.log(value, "SLECTEDVALUE");
 
-  const [changedStatus, setChangedStatus] = useState<string>("");
-  const [selectedOrder, setSelectedOrder] = useState<string>("");
+  // const [selectedOrderId, setSelectedOrderId] = useState<string>("");
 
   const getOrders = async () => {
     const res = await fetch("http://localhost:4000/api/orders");
-    const resData = await res.json();
-    const { data } = resData;
-    // console.log(data, "data");
+    const { data } = await res.json();
+    console.log(data, "data");
 
     setOrders(data);
   };
@@ -51,10 +50,18 @@ const OrdersPage = () => {
     getOrders();
   }, []);
 
-  const handleCheckStatus = (statusValue: string) => {
-    setChangedStatus(statusValue);
-    console.log(changedStatus, "changedStatus");
-  };
+  // const handleCheckStatus = (orderId: string) => {
+  //   setSelectedOrderId(orderId);
+  //   console.log(setSelectedOrderId, "setSelectedOrderId");
+  // };
+
+  // const handleChangeOrderStatus = async () => {
+  //   const response = await fetch("http://localhost:4000/api/orders", {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({}),
+  //   });
+  // };
 
   return (
     <AdminLayout>
@@ -72,7 +79,12 @@ const OrdersPage = () => {
             <div className="flex gap-3 items-center">
               <div>Date picker from to</div>
               <div>
-                <Button className="rounded-full">Change delivery state</Button>
+                <Button
+                  // onClick={() => handleChangeOrderStatus()}
+                  className="rounded-full"
+                >
+                  Change delivery state
+                </Button>
               </div>
             </div>
           </div>
@@ -86,7 +98,7 @@ const OrdersPage = () => {
                   <TableCell className="p-4">
                     <Checkbox
                       className="border-primary"
-                      onClick={() => handleCheckStatus(value)}
+                      // onChange={() => handleCheckStatus(order._id)}
                     />
                   </TableCell>
                   <TableCell className="p-4 text-foreground">{i + 1}</TableCell>
@@ -103,72 +115,21 @@ const OrdersPage = () => {
                   </TableCell>
                   <TableCell className="py-3 px-4">
                     {/* <OrderStatus orderStatus={order.status} /> */}
-                    <Popover open={open} onOpenChange={setOpen}>
-                      <PopoverTrigger asChild className="w-32 m-0 p-0 gap-2.5">
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          aria-expanded={open}
-                          className={`w-min-[102px] rounded-full text-foreground mx-0 px-0 font-semibold ${
-                            order.status === "PENDING" && "border-red-500"
-                          } ${
-                            order.status === "DELIVERED" &&
-                            "border-[#18BA51]/50"
-                          } ${order.status === "CANCELED" && "border-border"} ${
-                            value === "PENDING" && "border-red-500"
-                          } ${value === "DELIVERED" && "border-[#18BA51]/50"} ${
-                            value === "CANCELED" && "border-border"
-                          }`}
-                        >
-                          {value
-                            ? (() => {
-                                const selected = foodOrderStatuses.find(
-                                  (foodOrderStatus) =>
-                                    foodOrderStatus.value === value
-                                )?.label;
-                                return selected
-                                  ? selected.charAt(0) +
-                                      selected.slice(1).toLowerCase()
-                                  : "";
-                              })()
-                            : order.status.charAt(0) +
-                              order.status.slice(1).toLowerCase()}
+                    <Select value={value} onValueChange={setValue}>
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder={order.status} />
+                      </SelectTrigger>
 
-                          <ChevronsUpDown size={16} />
-                        </Button>
-                      </PopoverTrigger>
-
-                      <PopoverContent className="w-36 p-1 border-0">
-                        <Command>
-                          <CommandGroup>
-                            {foodOrderStatuses.map((foodOrderStatus) => (
-                              <CommandItem
-                                key={foodOrderStatus.value}
-                                value={foodOrderStatus.value}
-                                onSelect={(currentValue) => {
-                                  setValue(
-                                    currentValue === value ? "" : currentValue
-                                  );
-                                  setOpen(false);
-                                }}
-                                className="w-fit text-xs leading-4 text-primary bg-secondary rounded-full my-2 px-2.5 py-0.5"
-                              >
-                                {foodOrderStatus.label.charAt(0) +
-                                  foodOrderStatus.label.slice(1).toLowerCase()}
-                                {/* <Check
-                  className={cn(
-                    "ml-auto",
-                    value === foodOrderStatus.value
-                      ? "opacity-100"
-                      : "opacity-0"
-                  )}
-                /> */}
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
+                      <SelectContent>
+                        <SelectGroup>
+                          {foodOrderStatuses.map((foodOrderStatus) => (
+                            <SelectItem value={foodOrderStatus}>
+                              {foodOrderStatus}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                   </TableCell>
                 </TableRow>
               ))}

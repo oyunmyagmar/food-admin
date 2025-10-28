@@ -248,3 +248,13 @@
 //     </div>
 //   );
 // };
+{
+  /* <Check
+                  className={cn(
+                    "ml-auto",
+                    value === foodOrderStatus.value
+                      ? "opacity-100"
+                      : "opacity-0"
+                  )}
+                /> */
+}
