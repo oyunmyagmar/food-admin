@@ -21,11 +21,6 @@ export const SideBar = () => {
       btnPath: "/orders",
       btnIcon: <LiaTruckMovingSolid className="size-[22px]" />,
     },
-    {
-      btnName: "Settings",
-      btnPath: "/",
-      btnIcon: <LuSettings className="size-[22px]" />,
-    },
   ];
   const handleBtn = (btnPath: string) => {
     router.push(`${btnPath}`);

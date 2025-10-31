@@ -8,6 +8,6 @@ export * from "./food-related/AddNewFoodDialog";
 export * from "./food-related/EditNewFoodDialog";
 export * from "./food-related/CategorizedFoods";
 export * from "./SideBarLogoImg";
-export * from "./OrderStatus";
+export * from "./OrderStatusSelect";
 export * from "./OrderTableHeader";
 export * from "./OrderFoodsHover";

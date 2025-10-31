@@ -1,6 +1,6 @@
 import React from "react";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui";
 import Image from "next/image";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui";
 import { OrderType } from "@/lib/types";
 
 export const OrderFoodsHover = ({ order }: { order: OrderType }) => {

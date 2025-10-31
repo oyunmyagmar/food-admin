@@ -1,5 +1,6 @@
-import { CategoryType, NewFoodType } from "@/lib/types";
+"use client";
 import React, { useEffect, useState } from "react";
+import { CategoryType, NewFoodType } from "@/lib/types";
 
 export const useFood = () => {
   const [categories, setCategories] = useState<CategoryType[]>([]);
