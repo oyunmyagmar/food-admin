@@ -13,22 +13,37 @@ import {
   TableRow,
   Checkbox,
   Button,
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
 } from "@/components/ui";
 import { useOrder } from "../_hooks/use-order";
 
 const OrdersPage = () => {
   const { orders, refetchGetOrders } = useOrder();
   const foodOrderStatuses = ["PENDING", "CANCELED", "DELIVERED"];
-  const [value, setValue] = useState<string>("");
-  console.log(value, "SLECTEDVALUE");
 
+  const [checkedOrders, setCheckedOrders] = useState<string[]>([]);
+  // console.log(checkedOrders);
+  const [isOpenChangeState, setIsOpenChangeState] = useState<boolean>(false);
+
+  const handleCheckedBox = (orderId: string) => {
+    setCheckedOrders((prev) =>
+      prev.includes(orderId)
+        ? prev.filter((id) => id !== orderId)
+        : [...prev, orderId]
+    );
+  };
+
+  const handleChangeOrderStatus = () => {
+    console.log(checkedOrders, "SENDING");
+  };
   return (
     <AdminLayout>
       <div className="w-[1171px] h-100vh ml-6 mr-10 bg-secondary flex flex-col">
@@ -44,9 +59,47 @@ const OrdersPage = () => {
             </div>
             <div className="flex gap-3 items-center">
               <div>Date picker from to</div>
-              <div>
-                <Button className="rounded-full">Change delivery state</Button>
-              </div>
+
+              <AlertDialog
+                open={isOpenChangeState}
+                onOpenChange={setIsOpenChangeState}
+              >
+                <AlertDialogTrigger>
+                  <Button className="rounded-full">
+                    Change delivery state
+                  </Button>
+                </AlertDialogTrigger>
+
+                <AlertDialogContent className="w-91">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="flex justify-between">
+                      <div>Change delivery state</div>
+                      <Button
+                        variant={"secondary"}
+                        onClick={() => setIsOpenChangeState(false)}
+                        className="rounded-full"
+                      >
+                        X
+                      </Button>
+                    </AlertDialogTitle>
+                  </AlertDialogHeader>
+                  <div className="w-full flex gap-4">
+                    {foodOrderStatuses.map((status) => (
+                      <Button variant={"secondary"} className="rounded-full">
+                        {status}
+                      </Button>
+                    ))}
+                  </div>
+                  <AlertDialogFooter>
+                    <AlertDialogAction
+                      onClick={handleChangeOrderStatus}
+                      className="w-full rounded-full"
+                    >
+                      Save
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           </div>
 
@@ -58,15 +111,20 @@ const OrdersPage = () => {
                 <TableRow key={order._id}>
                   <TableCell className="p-4">
                     <Checkbox
+                      id={order._id}
+                      checked={checkedOrders.includes(order._id)}
+                      onCheckedChange={() => handleCheckedBox(order._id)}
                       className="border-primary"
-                      // onChange={() => handleCheckStatus(order._id)}
+                      // onChange={() => handleCheckedBox(order._id)}
                     />
                   </TableCell>
                   <TableCell className="p-4 text-foreground">{i + 1}</TableCell>
                   <TableCell className="p-4">{order.userId.email}</TableCell>
+
                   <TableCell className="p-4">
                     <OrderFoodsHover order={order} />
                   </TableCell>
+
                   <TableCell className="p-4">
                     {order.createdAt?.toLocaleString().split("T")[0]}
                   </TableCell>
@@ -74,6 +132,7 @@ const OrdersPage = () => {
                   <TableCell className="w-[213.5px] py-3 px-4 whitespace-normal text-xs leading-4">
                     <div className="line-clamp-2">{order.userId.address}</div>
                   </TableCell>
+
                   <TableCell className="py-3 px-4">
                     <OrderStatusSelect
                       order={order}
