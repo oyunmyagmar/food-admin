@@ -15,35 +15,50 @@ import {
   Button,
   AlertDialog,
   AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui";
 import { useOrder } from "../_hooks/use-order";
+import { OrderType } from "@/lib/types";
 
 const OrdersPage = () => {
   const { orders, refetchGetOrders } = useOrder();
   const foodOrderStatuses = ["PENDING", "CANCELED", "DELIVERED"];
-
   const [checkedOrders, setCheckedOrders] = useState<string[]>([]);
   // console.log(checkedOrders);
-  const [isOpenChangeState, setIsOpenChangeState] = useState<boolean>(false);
+  const [openChangeState, setOpenChangeState] = useState<boolean>(false);
 
-  const handleCheckedBox = (orderId: string) => {
+  const handleChangeSingleStatus = async (
+    orderId: string,
+    newStatus: string
+  ) => {
+    await fetch("http://localhost:4000/api/orders/status", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ orderId, newStatus }),
+    });
+    await refetchGetOrders();
+  };
+
+  const handleCheckedBox = (order: OrderType, orderId: string) => {
     setCheckedOrders((prev) =>
       prev.includes(orderId)
         ? prev.filter((id) => id !== orderId)
         : [...prev, orderId]
     );
+    console.log(order.status);
   };
 
-  const handleChangeOrderStatus = () => {
-    console.log(checkedOrders, "SENDING");
-  };
   return (
     <AdminLayout>
       <div className="w-[1171px] h-100vh ml-6 mr-10 bg-secondary flex flex-col">
@@ -61,10 +76,10 @@ const OrdersPage = () => {
               <div>Date picker from to</div>
 
               <AlertDialog
-                open={isOpenChangeState}
-                onOpenChange={setIsOpenChangeState}
+                open={openChangeState}
+                onOpenChange={setOpenChangeState}
               >
-                <AlertDialogTrigger>
+                <AlertDialogTrigger asChild>
                   <Button className="rounded-full">
                     Change delivery state
                   </Button>
@@ -76,25 +91,27 @@ const OrdersPage = () => {
                       <div>Change delivery state</div>
                       <Button
                         variant={"secondary"}
-                        onClick={() => setIsOpenChangeState(false)}
+                        onClick={() => setOpenChangeState(false)}
                         className="rounded-full"
                       >
                         X
                       </Button>
                     </AlertDialogTitle>
+                    <AlertDialogDescription></AlertDialogDescription>
                   </AlertDialogHeader>
                   <div className="w-full flex gap-4">
                     {foodOrderStatuses.map((status) => (
-                      <Button variant={"secondary"} className="rounded-full">
+                      <Button
+                        key={status}
+                        variant={"secondary"}
+                        className="rounded-full"
+                      >
                         {status}
                       </Button>
                     ))}
                   </div>
                   <AlertDialogFooter>
-                    <AlertDialogAction
-                      onClick={handleChangeOrderStatus}
-                      className="w-full rounded-full"
-                    >
+                    <AlertDialogAction className="w-full rounded-full">
                       Save
                     </AlertDialogAction>
                   </AlertDialogFooter>
@@ -113,9 +130,8 @@ const OrdersPage = () => {
                     <Checkbox
                       id={order._id}
                       checked={checkedOrders.includes(order._id)}
-                      onCheckedChange={() => handleCheckedBox(order._id)}
+                      onCheckedChange={() => handleCheckedBox(order, order._id)}
                       className="border-primary"
-                      // onChange={() => handleCheckedBox(order._id)}
                     />
                   </TableCell>
                   <TableCell className="p-4 text-foreground">{i + 1}</TableCell>
@@ -134,10 +150,40 @@ const OrdersPage = () => {
                   </TableCell>
 
                   <TableCell className="py-3 px-4">
-                    <OrderStatusSelect
+                    <Select
+                      defaultValue={order.status}
+                      onValueChange={(newStatus) =>
+                        handleChangeSingleStatus(order._id, newStatus)
+                      }
+                    >
+                      <SelectTrigger
+                        className={`w-full rounded-full text-xs leading-4 font-semibold text-primary ${
+                          order.status === "PENDING" && "border-red-500"
+                        } ${order.status === "CANCELED" && "border-border"} ${
+                          order.status === "DELIVERED" && "border-[#18BA51]/50"
+                        }`}
+                      >
+                        <SelectValue placeholder={order.status} />
+                      </SelectTrigger>
+
+                      <SelectContent>
+                        <SelectGroup>
+                          {foodOrderStatuses.map((status) => (
+                            <SelectItem
+                              key={status}
+                              value={status}
+                              className="text-xs leading-4 font-medium text-primary"
+                            >
+                              {status.charAt(0) + status.slice(1).toLowerCase()}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    {/* <OrderStatusSelect
                       order={order}
                       statuses={foodOrderStatuses}
-                    />
+                    /> */}
                   </TableCell>
                 </TableRow>
               ))}
