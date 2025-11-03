@@ -20,7 +20,6 @@ const ProductsPage = () => {
 
   const handleFilteredFoodsByCategories = (cateId: string) => {
     setSelectedCategoryId(cateId);
-    // console.log(selectedCategoryId);
   };
 
   return (

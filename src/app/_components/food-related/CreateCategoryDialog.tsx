@@ -22,6 +22,10 @@ export const CreateCategoryDialog = ({
   const [open, setOpen] = useState<boolean>(false);
   const [categoryName, setCategoryName] = useState<string>("");
 
+  const categoryNameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setCategoryName(e.target.value);
+  };
+
   const createCategoryHandler = async () => {
     if (!categoryName) {
       alert("Category name is required!");
@@ -44,10 +48,6 @@ export const CreateCategoryDialog = ({
     } catch (error) {
       console.error(error);
     }
-  };
-
-  const categoryNameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setCategoryName(e.target.value);
   };
 
   return (
