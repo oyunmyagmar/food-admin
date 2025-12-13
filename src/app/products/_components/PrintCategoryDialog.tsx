@@ -1,8 +1,9 @@
 "use client";
+
 import React from "react";
 import { Badge } from "@/components/ui";
-import { DeleteCategoryDialog } from "@/app/_components";
 import { NewFoodType } from "@/lib/types";
+import { DeleteCategoryDialog } from "@/app/products/_components";
 
 export const PrintCategoryDialog = ({
   _id,

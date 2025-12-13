@@ -1,5 +1,6 @@
 "use client";
-import React, { ChangeEvent, useState, useEffect } from "react";
+
+import React, { ChangeEvent, useState } from "react";
 import {
   Button,
   Dialog,
@@ -12,7 +13,8 @@ import {
   Input,
   Label,
 } from "@/components/ui";
-import { IoCloseOutline, IoAddOutline } from "react-icons/io5";
+import { IoAddOutline } from "react-icons/io5";
+import { toast } from "sonner";
 
 export const CreateCategoryDialog = ({
   refetchGetCategories,
@@ -21,6 +23,7 @@ export const CreateCategoryDialog = ({
 }) => {
   const [open, setOpen] = useState<boolean>(false);
   const [categoryName, setCategoryName] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const categoryNameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setCategoryName(e.target.value);
@@ -28,11 +31,13 @@ export const CreateCategoryDialog = ({
 
   const createCategoryHandler = async () => {
     if (!categoryName) {
-      alert("Category name is required!");
+      toast.warning("Category name is required!");
       return;
     }
 
     try {
+      setLoading(true);
+
       await fetch("http://localhost:4000/api/categories", {
         method: "POST",
         headers: {
@@ -42,11 +47,13 @@ export const CreateCategoryDialog = ({
       });
 
       await refetchGetCategories();
-      alert("New Category is being added to the menu!");
+      toast.success("New Category added to the menu!");
       setCategoryName("");
       setOpen(false);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -56,8 +63,8 @@ export const CreateCategoryDialog = ({
         <Button
           type="button"
           variant={"destructive"}
-          className="cursor-pointer w-9 h-9 rounded-full bg-red-500"
           onClick={() => setOpen(true)}
+          className="cursor-pointer w-9 h-9 rounded-full bg-red-500"
         >
           <IoAddOutline size={16} />
         </Button>
@@ -69,14 +76,6 @@ export const CreateCategoryDialog = ({
             <div className="flex-1 leading-7 text-foreground">
               Add new category
             </div>
-            <Button
-              type="button"
-              variant="secondary"
-              className="w-9 h-9 rounded-full"
-              onClick={() => setOpen(false)}
-            >
-              <IoCloseOutline size={16} />
-            </Button>
           </DialogTitle>
           <DialogDescription className="hidden" />
         </DialogHeader>
@@ -96,9 +95,10 @@ export const CreateCategoryDialog = ({
           />
         </div>
 
-        <DialogFooter className="mt-2">
+        <DialogFooter>
           <Button
             type="button"
+            disabled={loading}
             onClick={createCategoryHandler}
             size={"lg"}
             className="w-fit px-4"

@@ -1,7 +1,10 @@
 import React from "react";
 import Image from "next/image";
-import { AddNewFoodDialog, EditNewFoodDialog } from "@/app/_components";
 import { CategoryType, NewFoodType } from "@/lib/types";
+import {
+  AddNewFoodDialog,
+  EditNewFoodDialog,
+} from "@/app/products/_components";
 
 export const CategorizedFoods = ({
   refetchGetNewFoods,

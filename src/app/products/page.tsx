@@ -1,13 +1,13 @@
 "use client";
 import React, { useState } from "react";
-import {
-  AdminLayout,
-  CreateCategoryDialog,
-  CategorizedFoods,
-  PrintCategoryDialog,
-} from "@/app/_components";
 import { Badge, Button } from "@/components/ui";
 import { useFood } from "../_hooks/use-food";
+import {
+  CategorizedFoods,
+  CreateCategoryDialog,
+  PrintCategoryDialog,
+} from "@/app/products/_components";
+import { AdminLayout } from "../_components";
 
 const ProductsPage = () => {
   const { categories, foods, refetchGetCategories, refetchGetNewFoods } =
@@ -24,7 +24,7 @@ const ProductsPage = () => {
 
   return (
     <AdminLayout>
-      <div className="w-[1171px] h-100vh ml-6 mr-10 bg-secondary flex flex-col gap-6">
+      <div className="w-[1171px] ml-6 mr-10 bg-secondary flex flex-col gap-6">
         <div className="p-6 bg-background rounded-xl flex flex-col gap-4">
           <div className="w-full text-xl leading-7 font-semibold text-foreground">
             Dishes category

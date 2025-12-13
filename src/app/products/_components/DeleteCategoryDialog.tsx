@@ -1,5 +1,8 @@
+"use client";
+
 import React from "react";
 import { IoCloseOutline } from "react-icons/io5";
+import { toast } from "sonner";
 
 export const DeleteCategoryDialog = ({
   refetchGetCategories,
@@ -28,8 +31,7 @@ export const DeleteCategoryDialog = ({
           return;
         }
 
-        const resultText = await response.text();
-        console.log(`Delete successful, ${resultText}`);
+        toast.success("Category deleted successfully!");
         await refetchGetCategories();
         setSelectedCategoryId("");
       } catch (error) {
