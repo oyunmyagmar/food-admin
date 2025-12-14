@@ -3,7 +3,7 @@ import Image from "next/image";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui";
 import { OrderType } from "@/lib/types";
 
-export const OrderFoodsHover = ({ order }: { order: OrderType }) => {
+export const OrderTableFoodsHover = ({ order }: { order: OrderType }) => {
   return (
     <HoverCard>
       <HoverCardTrigger className="cursor-pointer">{`${order.foodOrderItems.length} foods`}</HoverCardTrigger>

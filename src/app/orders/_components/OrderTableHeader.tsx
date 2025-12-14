@@ -1,7 +1,6 @@
 import React from "react";
 import { TableHead, TableHeader, TableRow, Checkbox } from "@/components/ui";
 import { ChevronsUpDown } from "lucide-react";
-import { LuChevronsUpDown } from "react-icons/lu";
 
 export const OrderTableHeader = () => {
   return (
@@ -17,7 +16,7 @@ export const OrderTableHeader = () => {
         <TableHead className="w-40 p-4 text-muted-foreground">Food</TableHead>
         <TableHead className="w-40 p-4 text-muted-foreground">
           <div className="flex justify-between items-center">
-            <div>Date</div>
+            <p>Date</p>
             <ChevronsUpDown
               size={16}
               className="text-foreground stroke-[2px]"
@@ -30,7 +29,7 @@ export const OrderTableHeader = () => {
         </TableHead>
         <TableHead className="w-40 py-3 px-4 text-muted-foreground">
           <div className="flex justify-between items-center">
-            <div>Delivery state</div>{" "}
+            <p>Delivery state</p>
             <ChevronsUpDown
               size={16}
               className="text-foreground stroke-[2px]"

@@ -1,6 +1,7 @@
 "use client";
+
+import { useEffect, useState } from "react";
 import { OrderType } from "@/lib/types";
-import React, { useEffect, useState } from "react";
 
 export const useOrder = () => {
   const [orders, setOrders] = useState<OrderType[]>([]);
