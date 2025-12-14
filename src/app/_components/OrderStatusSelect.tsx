@@ -18,7 +18,6 @@ export const OrderStatusSelect = ({
   statuses: string[];
 }) => {
   const [value, setValue] = useState<string>(order.status);
-  // console.log(value, "SELECTEDstatusVALUE");
 
   return (
     <Select value={value} onValueChange={setValue}>

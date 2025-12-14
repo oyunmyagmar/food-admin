@@ -9,7 +9,6 @@ export const useOrder = () => {
   const getOrders = async () => {
     const res = await fetch("https://food-next-backend.vercel.app/api/orders");
     const { data } = await res.json();
-    console.log(data, "data");
 
     setOrders(data);
   };

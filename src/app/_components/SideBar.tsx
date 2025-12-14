@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui";
-import { LuLayoutDashboard, LuSettings } from "react-icons/lu";
+import { LuLayoutDashboard } from "react-icons/lu";
 import { LiaTruckMovingSolid } from "react-icons/lia";
 import { SideBarLogoImg } from "@/app/_components";
 import { usePathname, useRouter } from "next/navigation";

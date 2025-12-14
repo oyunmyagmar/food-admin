@@ -1,6 +1,5 @@
-import { Shell } from "lucide-react";
 import React from "react";
-import { RiAdminLine } from "react-icons/ri";
+import { Shell } from "lucide-react";
 
 export const Header = () => {
   return (
