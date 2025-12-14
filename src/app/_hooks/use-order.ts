@@ -7,7 +7,7 @@ export const useOrder = () => {
   const [orders, setOrders] = useState<OrderType[]>([]);
 
   const getOrders = async () => {
-    const res = await fetch("http://localhost:4000/api/orders");
+    const res = await fetch("https://food-next-backend.vercel.app/api/orders");
     const { data } = await res.json();
     console.log(data, "data");
 

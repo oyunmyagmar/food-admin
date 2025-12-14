@@ -17,7 +17,7 @@ export const DeleteCategoryDialog = ({
     if (confirm("Are you sure you want to delete this category?")) {
       try {
         const response = await fetch(
-          `http://localhost:4000/api/categories/${id}`,
+          `https://food-next-backend.vercel.app/api/categories/${id}`,
           {
             method: "DELETE",
           }

@@ -23,7 +23,7 @@ const OrdersPage = () => {
     orderId: string,
     newStatus: string
   ) => {
-    await fetch("http://localhost:4000/api/orders/status", {
+    await fetch("https://food-next-backend.vercel.app/api/orders/status", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ orderId, newStatus }),
@@ -44,10 +44,13 @@ const OrdersPage = () => {
       toast.warning("Select orders or statu!s");
     }
 
-    await fetch("http://localhost:4000/api/orders/bulk-status", {
+    await fetch("https://food-next-backend.vercel.app/api/orders/bulk-status", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ordersId: checkedOrders, newStatus: bulkStatus }),
+      body: JSON.stringify({
+        ordersId: checkedOrders,
+        newStatus: bulkStatus,
+      }),
     });
 
     setCheckedOrders([]);
