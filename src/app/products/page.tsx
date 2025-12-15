@@ -24,7 +24,7 @@ const ProductsPage = () => {
 
   return (
     <AdminLayout>
-      <div className="w-[1171px] ml-6 mr-10 bg-secondary flex flex-col gap-6">
+      <div className="w-[1171px] h-screen ml-6 mr-10 bg-secondary flex flex-col gap-6">
         <div className="p-6 bg-background rounded-xl flex flex-col gap-4">
           <div className="w-full text-xl leading-7 font-semibold text-foreground">
             Dishes category

@@ -60,7 +60,7 @@ const OrdersPage = () => {
   };
   return (
     <AdminLayout>
-      <div className="w-[1171px] h-100vh ml-6 mr-10 bg-secondary flex flex-col">
+      <div className="w-[1171px] h-screen ml-6 mr-10 bg-secondary flex flex-col">
         <div className="w-full h-fit rounded-lg bg-background border border-border">
           <div className="flex justify-between items-center p-4 border-b border-border">
             <div>

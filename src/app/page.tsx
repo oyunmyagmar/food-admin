@@ -11,12 +11,12 @@ const HomePage = () => {
 
   return (
     <AdminLayout>
-      <div className="w-[1171px] ml-6 mr-10 pb-10 bg-secondary">
-        <img src={"/hero.png"} alt="" className="opacity-40 h-auto" />
+      <div className="w-[1171px] h-screen ml-6 mr-10 pb-10 bg-secondary">
+        <img src={"/hero.png"} alt="" className="opacity-40 h-auto relative" />
         <Button
           variant={"outline"}
           onClick={() => router.push("/")}
-          className="absolute z-50 top-1/2 left-1/2 cursor-pointer"
+          className="absolute z-50 top-100 left-1/2 cursor-pointer"
         >
           Go to Client Panel <MousePointerClick />
         </Button>
